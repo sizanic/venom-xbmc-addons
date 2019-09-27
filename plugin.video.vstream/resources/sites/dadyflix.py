@@ -7,29 +7,33 @@ from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
-from resources.lib.comaddon import progress, VSlog
+from resources.lib.util import cUtil
+from resources.lib.comaddon import progress#, VSlog
+import re
+from datetime import date
+
 
 SITE_IDENTIFIER = 'dadyflix'
 SITE_NAME = 'DadyFlix'
 SITE_DESC = 'Films en streaming, streaming hd, streaming 720p, Films/séries, récent'
 
-URL_MAIN = 'https://www.dadyflix.net/'
-URL_SEARCH = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_MOVIES = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_SERIES = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_MISC = (URL_MAIN + '?s=', 'showMovies')
-FUNCTION_SEARCH = 'showMovies'
+URL_MAIN = 'https://www.dadyflix.ws/'
 
-MOVIE_NEWS = (URL_MAIN + 'filmstreaming/', 'showMovies')
-MOVIE_MOVIE = ('http://', 'load')
+FUNCTION_SEARCH = 'showMovies'
+URL_SEARCH = (URL_MAIN + '?s=', 'showMovies')
+URL_SEARCH_MOVIES = (URL_SEARCH[0], 'showMovies')
+URL_SEARCH_SERIES = (URL_SEARCH[0], 'showMovies')
+
+MOVIE_MOVIE = ('http://', 'showMenuMovies')
+MOVIE_NEWS = (URL_MAIN + 'films/', 'showMovies')
 MOVIE_VIEWS = (URL_MAIN + 'tendance/','showMovies')
 MOVIE_COMMENTS = (URL_MAIN + 'les-plus-populaires/', 'showMovies')
 MOVIE_GENRES = (True, 'showGenres')
+MOVIE_ANNEES = (True, 'showMovieYears')
 
-SERIE_SERIES = ('http://', 'load')
+SERIE_SERIES = ('http://', 'showMenuSeries')
 SERIE_NEWS = (URL_MAIN + 'series/', 'showMovies')
 SERIE_COMMENTS =  (URL_MAIN + 'les-plus-populaires/?get=tv', 'showMovies')
-MOVIE_GENRES = (True, 'showGenres')
 SERIE_NETFLIX = (URL_MAIN + 'network/netflix/', 'showMovies')
 
 def load():
@@ -40,6 +44,19 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuMovies', 'Films (Menu)', 'films.png', oOutputParameterHandler)
+
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'Séries (Menu)', 'series.png', oOutputParameterHandler)
+
+    oGui.setEndOfDirectory()
+
+def showMenuMovies():
+    oGui = cGui()
+
+    oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
@@ -48,12 +65,21 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, MOVIE_GENRES[1], 'Films (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANNEES[0])
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par Années)', 'annees.png', oOutputParameterHandler)
+
+    oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_VIEWS[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_VIEWS[1], 'Films (Les plus vus)', 'views.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_COMMENTS[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus populaires)', 'comments.png', oOutputParameterHandler)
+
+    oGui.setEndOfDirectory()
+
+def showMenuSeries():
+    oGui = cGui()
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
@@ -74,7 +100,7 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        sUrl = URL_SEARCH[0] + sSearchText
+        sUrl = URL_SEARCH[0] + sSearchText.replace(' ', '+')
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return
@@ -108,22 +134,32 @@ def showGenres():
 
     oGui.setEndOfDirectory()
 
+def showMovieYears():
+    oGui = cGui()
+    
+    for i in reversed (xrange(1971, date.today().year+1)):
+        Year = str(i)
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + 'annee/' + Year + '/')
+        oGui.addDir(SITE_IDENTIFIER, 'showMovies', Year, 'annees.png', oOutputParameterHandler)
+
+    oGui.setEndOfDirectory()
+
 def showMovies(sSearch = ''):
     oGui = cGui()
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+
     if sSearch:
-      sUrl = sSearch
+        sUrl = sSearch
+        sPattern = '<a href="([^"]+)"><img src="([^"]+)" alt=.+?<span class="(.+?)".+?href=.+?>([^<]+)<.+?"year">(.+?)<.+?"contenido"><p>(.+?)<'
+    elif '/les-plus-populaires/' in sUrl or '/tendance/' in sUrl:
+        sPattern = '<img src="([^"]+)" alt="(?:film|serie) ([^"]+)streaming".+?(?:|quality">([^<]+)<.+?)href="([^"]+)".+?<span>(.+?)<'
     else:
-        oInputParameterHandler = cInputParameterHandler()
-        sUrl = oInputParameterHandler.getValue('siteUrl')
+        sPattern = '<img src="([^"]+)" alt="(?:film|serie) ([^"]+)streaming".+?(?:|quality">([^<]+)<.+?)href="([^"]+)".+?<span>(.+?)<.+?div class="texto">([^<]+)</div>'
 
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    if sSearch:
-        sPattern = '<a href="([^"]+)"><img src="([^"]+)" alt=.+?href=.+?>([^<]+)<(?:.+?<p>([^<]+)<|)'
-    elif '/les-plus-populaires/' in sUrl or '/tendance/' in sUrl:
-        sPattern = '<img src="([^"]+)" alt="(?:film|serie) ([^"]+)streaming".+?(?:|quality">([^<]+)<.+?)href="([^"]+)"'
-    else:
-        sPattern = '<img src="([^"]+)" alt="(?:film|serie) ([^"]+)streaming".+?(?:|quality">([^<]+)<.+?)href="([^"]+)".+?div class="texto">([^<]+)</div>'
 
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
@@ -142,26 +178,33 @@ def showMovies(sSearch = ''):
 
             if sSearch:
                 sUrl2 = aEntry[0]
-                sThumb = aEntry[1].replace('w185', 'w342')
-                sTitle = aEntry[2]
-                sQual = ''
-                setDisplayName = ('%s [%s]') % (sTitle , sQual)
+                sThumb = re.sub('/w\d+', '/w342', aEntry[1], 1)
+                sQual = aEntry[2].replace('tvshows', 'Série').replace('movies', 'Film')
+                sTitle = aEntry[3]
+                setDisplayName = ('%s [%s]') % (sTitle, sQual)
             else:
-                sThumb = aEntry[0].replace('w185', 'w342')
+                sThumb = re.sub('/w\d+', '/w342', aEntry[0], 1)
                 sTitle = aEntry[1]
                 sQual = aEntry[2].replace('Haute-qualité', 'HD')
                 sUrl2 = aEntry[3]
-                setDisplayName = ('%s [%s]') % (sTitle , sQual)
 
-            try:
-                sDesc = aEntry[4].replace('&#8217;', '\'').replace('&#8230;', '...').replace('>', '')
-            except IndexError:
-                sDesc = ""
+            sYear = aEntry[4]
+            setDisplayName = ('%s [%s](%s)') % (sTitle, sQual, sYear)
+    
+            sDesc = ''
+            if len(aEntry) > 5:
+                sDesc = aEntry[5].replace('&#8217;', '\'').replace('&#8230;', '...').replace('>', '')
+
+            #Si recherche et trop de resultat, on nettoye
+            if sSearch and total > 3:
+                if cUtil().CheckOccurence(sSearch.replace(URL_SEARCH[0], ''), sTitle) == 0:
+                    continue
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
             oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
             oOutputParameterHandler.addParameter('sThumb', sThumb)
+            oOutputParameterHandler.addParameter('sYear', sYear)
 
             if '/series/' in sUrl2:
                 oGui.addTV(SITE_IDENTIFIER, 'ShowSerieSaisonEpisodes', setDisplayName, '', sThumb, sDesc, oOutputParameterHandler)
@@ -170,18 +213,18 @@ def showMovies(sSearch = ''):
 
         progress_.VSclose(progress_)
 
+    if not sSearch:
         sNextPage = __checkForNextPage(sHtmlContent)
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
-    if not sSearch:
         oGui.setEndOfDirectory()
 
 def __checkForNextPage(sHtmlContent):
     oParser = cParser()
-    sPattern = "<span class=\"current\">.+?</span><a href='([^\"]+)'"
+    sPattern = "<span class=\"current\">.+?</span><a href='([^']+)'"
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
@@ -227,14 +270,15 @@ def ShowSerieSaisonEpisodes():
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    sPattern = '<a href="([^<]+)"><img src="([^<]+)"></a></div><div class="numerando">(.+?) - (.+?)</div><div class="episodiotitle"><a href=".+?>([^<]+)</a>'
-
     oParser = cParser()
+    sPattern = '<a href="([^"]+)"><img src="([^"]+)"></a></div><div class="numerando">(.+?) - (.+?)</div><div class="episodiotitle">'
     aResult = oParser.parse(sHtmlContent, sPattern)
+
+    if (aResult[0] == False):
+        oGui.addText(SITE_IDENTIFIER)
 
     if (aResult[0] == True):
         total = len(aResult[1])
-
         progress_ = progress().VScreate(SITE_NAME)
 
         for aEntry in aResult[1]:
@@ -242,8 +286,7 @@ def ShowSerieSaisonEpisodes():
             if progress_.iscanceled():
                 break
 
-            sTitle = aEntry[4]
-            sTitle = 'Saison ' + aEntry[2] + ' Episode' + aEntry[3] + ' ' + sMovieTitle
+            sTitle = sMovieTitle + ' Saison ' + aEntry[2] + ' Episode' + aEntry[3]
             sUrl2 = aEntry[0]
             sThumb = aEntry[1]
 
@@ -268,7 +311,7 @@ def seriesHosters():
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    sPattern = '<a id="playerlink.+?" data-src-player="([^<]+)" vid-link=".+?">.+?<img src=".+?/flags/(.+?).png"'
+    sPattern = '<a id="playerlink.+?" data-src-player="([^"]+)" vid-link=".+?">.+?<img src=".+?/flags/(.+?).png"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -278,7 +321,7 @@ def seriesHosters():
             sHosterUrl = aEntry[0]
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             if (oHoster != False):
-                oHoster.setDisplayName(sMovieTitle + ' [' + aEntry[1] + ']')
+                oHoster.setDisplayName(sMovieTitle + ' (' + aEntry[1].upper() + ')')
                 oHoster.setFileName(sMovieTitle)
                 cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumb)
 

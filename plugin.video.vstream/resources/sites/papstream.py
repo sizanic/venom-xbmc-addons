@@ -10,20 +10,16 @@ from resources.lib.parser import cParser
 from resources.lib.comaddon import progress
 #import urllib2
 
-# Pas trouve de clones
-return False
-
 SITE_IDENTIFIER = 'papstream'
 SITE_NAME = 'PapStream'
 SITE_DESC = 'Films, Séries & Mangas'
 
-URL_MAIN = 'https://www.papystreaming.co/'
+URL_MAIN = 'https://www.papstream.info/'
 
+FUNCTION_SEARCH = 'showMovies'
 URL_SEARCH = (URL_MAIN + 'rechercher', 'showMovies')
-
 URL_SEARCH_MOVIES = ('', 'showMovies')
 URL_SEARCH_SERIES = ('', 'showMovies')
-FUNCTION_SEARCH = 'showMovies'
 
 MOVIE_NEWS = (URL_MAIN + 'dernier-films.html', 'showMovies')
 MOVIE_MOVIE = (URL_MAIN + 'films.html', 'showMovies')
@@ -95,7 +91,7 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        showMovies( sSearchText )
+        showMovies(sSearchText)
         oGui.setEndOfDirectory()
         return
 
@@ -188,10 +184,8 @@ def showMovies(sSearch = ''):
         oRequestHandler.addParametersLine('subaction=search')
         oRequestHandler.addParametersLine('story=' + sSearch)
 
-
     sHtmlContent = oRequestHandler.request()
-
-    sPattern = 'class="short-images-link"><img src="([^"]+)".+?short-link"><a href="([^"]+)".+?>([^<]+)</a>'
+    sPattern = 'class="short-images-link".+?img src="([^"]+)".+?short-link"><a href="([^"]+)".+?>([^<]+)</a>'
 
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -217,7 +211,7 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('sThumb', sThumb)
 
             if '/series/' in sUrl or '/animes/' in sUrl:
-                oGui.addTV(SITE_IDENTIFIER, 'showSerieSaisons', sTitle, 'series.png', sThumb, '', oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSaisons', sTitle, 'series.png', sThumb, '', oOutputParameterHandler)
             else:
                 oGui.addMovie(SITE_IDENTIFIER, 'showLink', sTitle, 'films.png', sThumb, '', oOutputParameterHandler)
 
@@ -242,7 +236,7 @@ def __checkForNextPage(sHtmlContent):
 
     return False
 
-def showSerieSaisons():
+def showSaisons():
     oGui = cGui()
     oParser = cParser()
     oInputParameterHandler = cInputParameterHandler()
@@ -281,6 +275,8 @@ def showSerieSaisons():
                 break
 
             sUrl2   = aEntry[0]
+            if sUrl2.startswith('/'):
+                sUrl2 = URL_MAIN[:-1] + sUrl2
             sSaison = aEntry[1]
             sTitle  = ("%s %s") % (sSaison, sMovieTitle)
 
@@ -289,13 +285,13 @@ def showSerieSaisons():
             oOutputParameterHandler.addParameter('sThumb', sThumb)
             oOutputParameterHandler.addParameter('sDesc', sDesc)
 
-            oGui.addTV(SITE_IDENTIFIER, 'ShowSerieEpisodes', sTitle, '', sThumb, sDesc, oOutputParameterHandler)
+            oGui.addTV(SITE_IDENTIFIER, 'ShowEpisodes', sTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
         progress_.VSclose(progress_)
 
     oGui.setEndOfDirectory()
 
-def ShowSerieEpisodes():
+def ShowEpisodes():
     oGui = cGui()
     oParser = cParser()
     oInputParameterHandler = cInputParameterHandler()
@@ -361,7 +357,7 @@ def showLink():
     if (aResult[0] == True):
         for aEntry in aResult[1]:
 
-            sUrl2  = URL_MAIN[:-1] + aEntry[0]
+            sUrl2  = aEntry[0]
             sHost  = aEntry[1].capitalize()
             sLang  = aEntry[2].replace('/images/', '').replace('.png', '')
             sQual  = aEntry[3].replace('(', '').replace(')', '')
@@ -383,7 +379,9 @@ def showHosters():
     sUrl = oInputParameterHandler.getValue('sUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumb = oInputParameterHandler.getValue('sThumb')
-
+    
+    if sUrl.startswith('/'):
+        sUrl = URL_MAIN[:-1] + sUrl
     #headers = {'User-Agent': UA, 'Referer': refUrl}
 
     oRequestHandler = cRequestHandler(sUrl)

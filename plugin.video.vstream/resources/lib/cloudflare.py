@@ -3,18 +3,25 @@
 #
 #alors la j'ai pas le courage
 from __future__ import division
-
-import re,os
-import time, json, random
-
-import xbmc
-
+from resources.lib.comaddon import VSlog
 from resources.lib.config import GestionCookie
+
+from requests.adapters import HTTPAdapter
+from collections import OrderedDict
+
+import re, os, time, json, random, ssl, requests
+
+from requests.sessions import Session
+
+from jsunfuck import JSUnfuck
 
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
+    
+#old version
+from requests.packages.urllib3.util.ssl_ import create_urllib3_context
 
 ##########################################################################################################################################################
 #
@@ -22,12 +29,7 @@ except ImportError:
 # From this url https://github.com/VeNoMouS/cloudscraper
 # Franchement si vous etes content de voir revenir vos sites allez mettre une etoile sur son github.
 #
-
-import ssl
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.ssl_ import create_urllib3_context
-from collections import OrderedDict
-
+##########################################################################################################################################################
 class CipherSuiteAdapter(HTTPAdapter):
 
     def __init__(self, cipherSuite=None, **kwargs):
@@ -51,12 +53,12 @@ class CipherSuiteAdapter(HTTPAdapter):
         kwargs['ssl_context'] = self.ssl_context
         return super(CipherSuiteAdapter, self).proxy_manager_for(*args, **kwargs)
 
-
-
 ##########################################################################################################################################################
 
+Mode_Debug = True
 
 if (False):
+    Mode_Debug = True
     import logging
     # These two lines enable debugging at httplib level (requests->urllib3->http.client)
     # You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
@@ -74,16 +76,6 @@ if (False):
     requests_log = logging.getLogger("requests.packages.urllib3")
     requests_log.setLevel(logging.DEBUG)
     requests_log.propagate = True
-
-from requests.sessions import Session
-
-from jsunfuck import JSUnfuck
-
-Mode_Debug = False
-
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 #---------------------------------------------------------
 #Gros probleme, mais qui a l'air de passer
@@ -135,7 +127,7 @@ def solvecharcode(chain,t):
 
     r = parseInt(dat)
     v = ord(t[int(r)])
-    print ('value ' + str(r) + ' Result ' + str(v))
+    VSlog ('value ' + str(r) + ' Result ' + str(v))
     chain = chain.replace('t.charCodeAt' + dat, '+' + str(v) )
     
     #Remove parzenthesis
@@ -159,8 +151,7 @@ def checkpart(s,end='+'):
             pos = pos + 1
                 
             if (c == end) and (p == 0) and (pos > 1):
-                break
-                
+                break   
     except:
         pass
 
@@ -184,7 +175,6 @@ def showInfo(sTitle, sDescription, iSeconds=0):
     else:
         iSeconds = iSeconds * 1000
     #xbmc.executebuiltin("Notification(%s,%s,%s)" % (str(sTitle), (str(sDescription)), iSeconds))
-
 
 class CloudflareBypass(object):
 
@@ -214,7 +204,7 @@ class CloudflareBypass(object):
 
         sPattern = '(?:^|[,;]) *([^;,]+?)=([^;,\/]+)'
         aResult = re.findall(sPattern,data)
-        ##print(str(aResult))
+        ##VSlog(str(aResult))
         if (aResult):
             for cook in aResult:
                 if 'deleted' in cook[1]:
@@ -222,7 +212,7 @@ class CloudflareBypass(object):
                 list[cook[0]]= cook[1]
                 #cookies = cookies + cook[0] + '=' + cook[1]+ ';'
 
-        ##print(str(list))
+        ##VSlog(str(list))
 
         return list
 
@@ -256,13 +246,13 @@ class CloudflareBypass(object):
         return head
 
     def GetResponse(self,htmlcontent,domain):
-        #print(htmlcontent)
+        #VSlog(htmlcontent)
 
         #truc cache
         rq = re.search('<div style="display:none;visibility:hidden;" id="(.*?)">(.*?)<\/div>', str(htmlcontent),re.MULTILINE | re.DOTALL)
         id = rq.group(1)
         val = rq.group(2)
-        #print (str(id) + ' ' + str(val))
+        #VSlog (str(id) + ' ' + str(val))
 
         htmlcontent = re.sub(
             r'function\(p\){var p = eval\(eval\(.+?return \+\(p\)}\(\);',
@@ -293,16 +283,16 @@ class CloudflareBypass(object):
         htmlcontent = js
 
         AllLines = re.findall(';' + varname + '([*\-+])=([^;]+)',str(htmlcontent))
-        #print ('\nFirst line : ' + str(line1[0][2]) )
+        #VSlog ('\nFirst line : ' + str(line1[0][2]) )
 
         for aEntry in AllLines:
 
-            #print ('\nother lines : ' + str(aEntry))
+            #VSlog ('\nother lines : ' + str(aEntry))
             s = str(aEntry[0])
             v = parseInt(aEntry[1])
 
             calcul = eval( format(calcul,'.17g') + str(aEntry[0]) + format(v,'.17g'))
-            #print(">>>>>>>>>>>>>>>>: " + format(calcul,'.17g')+ '\n')
+            #VSlog(">>>>>>>>>>>>>>>>: " + format(calcul,'.17g')+ '\n')
 
         rep = calcul# + len(domain)
         ret = format(rep,'.10f')
@@ -322,7 +312,7 @@ class CloudflareBypass(object):
 
         #Memorise cookie
         self.Memorised_Cookies = cookies
-        #print(cookies)
+        #VSlog(cookies)
 
         #cookies in headers ?
         if Gived_headers != '':
@@ -334,12 +324,12 @@ class CloudflareBypass(object):
 
         #For debug
         if (Mode_Debug):
-            xbmc.log('Headers present ' + str(Gived_headers), xbmc.LOGNOTICE)
-            xbmc.log('url ' + url, xbmc.LOGNOTICE)
+            VSlog('Headers present ' + str(Gived_headers))
+            VSlog('url ' + url)
             if (htmlcontent):
-                xbmc.log('code html ok', xbmc.LOGNOTICE)
-            xbmc.log('cookies passés' + self.Memorised_Cookies, xbmc.LOGNOTICE)
-            xbmc.log('post data :' + str(postdata), xbmc.LOGNOTICE)
+                VSlog('code html ok')
+            VSlog('cookies passés' + self.Memorised_Cookies)
+            VSlog('post data :' + str(postdata))
 
         self.hostComplet = re.sub(r'(https*:\/\/[^/]+)(\/*.*)','\\1',url)
         self.host = re.sub(r'https*:\/\/','',self.hostComplet)
@@ -348,7 +338,7 @@ class CloudflareBypass(object):
         cookieMem = GestionCookie().Readcookie(self.host.replace('.', '_'))
         if not (cookieMem == ''):
             if (Mode_Debug):
-                xbmc.log('cookies present sur disque :' + cookieMem , xbmc.LOGNOTICE)
+                VSlog('cookies present sur disque :' + cookieMem )
             if not (self.Memorised_Cookies):
                 cookies = cookieMem
             else:
@@ -369,10 +359,14 @@ class CloudflareBypass(object):
         
         r = s.request(method,url,headers = self.SetHeader() , cookies = self.ParseCookies(cookies) , data = data )
         if r:
-            sContent = r.text.encode("utf-8") 
+            sContent = r.text.encode("utf-8")
+            self.RedirectionUrl = r.url
+            self.Header = r.headers
         else:
-            xbmc.log("Erreur, delete cookie" , xbmc.LOGNOTICE)
+            VSlog("Erreur, delete cookie" )
             sContent = ''
+            #self.RedirectionUrl = r.url
+            #self.Header = r.headers
             s.MemCookie = ''
             GestionCookie().DeleteCookie(self.host.replace('.', '_'))
         
@@ -389,14 +383,12 @@ class CloudflareBypass(object):
             #Write them
             GestionCookie().SaveCookie(self.host.replace('.', '_'),c)
             if Mode_Debug:
-                xbmc.log("Sauvegarde cookies : " + str(c) , xbmc.LOGNOTICE)
+                VSlog("Sauvegarde cookies : " + str(c) )
         
         return sContent
 
-        
 #----------------------------------------------------------------------------------------------------------------
-# Code from https://github.com/VeNoMouS/cloudflare-scrape-js2py
-
+# Code from https://github.com/VeNoMouS/cloudscraper
 class CloudflareScraper(Session):
     def __init__(self, *args, **kwargs):
     
@@ -416,43 +408,57 @@ class CloudflareScraper(Session):
                 'DNT': '1'
             }
             
+        self.cipherHeader = {
+                'cipherSuite': [
+                    "TLS_AES_128_GCM_SHA256",
+                    "TLS_CHACHA20_POLY1305_SHA256",
+                    "TLS_AES_256_GCM_SHA384",
+                    "ECDHE-ECDSA-AES128-GCM-SHA256",
+                    "ECDHE-RSA-AES128-GCM-SHA256",
+                    "ECDHE-ECDSA-CHACHA20-POLY1305",
+                    "ECDHE-RSA-CHACHA20-POLY1305",
+                    "ECDHE-ECDSA-AES256-GCM-SHA384",
+                    "ECDHE-RSA-AES256-GCM-SHA384",
+                    "ECDHE-ECDSA-AES256-SHA",
+                    "ECDHE-ECDSA-AES128-SHA",
+                    "ECDHE-RSA-AES128-SHA",
+                    "ECDHE-RSA-AES256-SHA",
+                    "DHE-RSA-AES128-SHA",
+                    "AES128-SHA",
+                    "AES256-SHA"
+                ],
+            }
+
         self.MemCookie = {}
         
         self.cipherSuite = None
         self.mount('https://', CipherSuiteAdapter(self.loadCipherSuite()))
         
-        
     ##########################################################################################################################################################
     #
     #Thx again to to VeNoMouS for this code
-    
+    ##########################################################################################################################################################
+
     def loadCipherSuite(self):
         if self.cipherSuite:
             return self.cipherSuite
 
-        self.cipherSuite = ''
-
-        if hasattr(ssl, 'PROTOCOL_TLS'):
-            ciphers = [
-                'ECDHE-ECDSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-ECDSA-AES256-GCM-SHA384',
-                'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-CHACHA20-POLY1305-SHA256', 'ECDHE-RSA-CHACHA20-POLY1305-SHA256',
-                'ECDHE-RSA-AES128-CBC-SHA', 'ECDHE-RSA-AES256-CBC-SHA', 'RSA-AES128-GCM-SHA256', 'RSA-AES256-GCM-SHA384',
-                'ECDHE-RSA-AES128-GCM-SHA256', 'RSA-AES256-SHA', '3DES-EDE-CBC'
-            ]
-
-            if hasattr(ssl, 'PROTOCOL_TLSv1_3'):
-                ciphers.insert(0, ['GREASE_3A', 'GREASE_6A', 'AES128-GCM-SHA256', 'AES256-GCM-SHA256', 'AES256-GCM-SHA384', 'CHACHA20-POLY1305-SHA256'])
-
-            ctx = ssl.SSLContext(getattr(ssl, 'PROTOCOL_TLSv1_3', ssl.PROTOCOL_TLSv1_2))
-
-            for cipher in ciphers:
+        if hasattr(ssl, 'Purpose') and hasattr(ssl.Purpose, 'SERVER_AUTH'):
+            for cipher in self.cipherHeader["cipherSuite"]:
                 try:
-                    ctx.set_ciphers(cipher)
-                    self.cipherSuite = '{}:{}'.format(self.cipherSuite, cipher).rstrip(':')
-                except ssl.SSLError:
+                    context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+                    context.set_ciphers(cipher)
+                except (ssl.SSLError):
+                    self.cipherHeader["cipherSuite"].remove(cipher)
                     pass
 
-        return self.cipherSuite
+            if self.cipherHeader["cipherSuite"]:
+                self.cipherSuite = ':'.join(self.cipherHeader["cipherSuite"])
+                return self.cipherSuite
+
+        raise RuntimeError("The SSL compiled into python does not meet the minimum cipher suite requirements.")
+
+    ##########################################################################################################################################################
 
     def request(self, method, url, *args, **kwargs):
         
@@ -463,15 +469,15 @@ class CloudflareScraper(Session):
             self.MemCookie.update( kwargs['cookies'] )
             
         if Mode_Debug:
-            xbmc.log("Headers send : " + str(kwargs['headers']) , xbmc.LOGNOTICE)
-            xbmc.log("Cookies send : " + str(kwargs['cookies']) , xbmc.LOGNOTICE)
-            xbmc.log("url : " + url , xbmc.LOGNOTICE)
-            xbmc.log("data send : " + str(kwargs.get('params','')) , xbmc.LOGNOTICE)
-            xbmc.log("param send : " + str(kwargs.get('data','')) , xbmc.LOGNOTICE)
+            VSlog("Headers send : " + str(kwargs['headers']) )
+            VSlog("Cookies send : " + str(kwargs['cookies']) )
+            VSlog("url : " + url )
+            VSlog("data send : " + str(kwargs.get('params','')) )
+            VSlog("param send : " + str(kwargs.get('data','')) )
             
         resp = super(CloudflareScraper, self).request(method, url, *args, **kwargs)
 
-        #xbmc.log( 'cookie recu ' + str(resp.cookies.get_dict())  , xbmc.LOGNOTICE)
+        #VSlog( 'cookie recu ' + str(resp.cookies.get_dict())  )
 
         #save cookie
         self.MemCookie.update( resp.cookies.get_dict() )
@@ -482,28 +488,27 @@ class CloudflareScraper(Session):
         # Check if Cloudflare anti-bot is on
         if self.ifCloudflare(resp):
             
-            xbmc.log('Page still protected' , xbmc.LOGNOTICE)
+            VSlog('Page still protected' )
             
             resp2 = self.solve_cf_challenge(resp, **kwargs)
             
             #self.MemCookie.update( resp.cookies.get_dict() )
-            #print ('cookie recu ' + str(self.MemCookie) )
+            #VSlog ('cookie recu ' + str(self.MemCookie) )
         
             return resp2
             
-
         # Otherwise, no Cloudflare anti-bot detected
         if resp:
-            xbmc.log('Page decodee' , xbmc.LOGNOTICE)
+            VSlog('Page decodee' )
             
         return resp
 
     def ifCloudflare(self, resp):
         if resp.headers.get('Server', '').startswith('cloudflare'):
             if self.cf_tries >= 3:
-                xbmc.log('Failed to solve Cloudflare challenge!' , xbmc.LOGNOTICE)
+                VSlog('Failed to solve Cloudflare challenge!' )
             elif b'/cdn-cgi/l/chk_captcha' in resp.content:
-                xbmc.log('Protect by Captcha' , xbmc.LOGNOTICE)
+                VSlog('Protect by Captcha' )
                 #One more try ?
                 if not self.GetCaptha:
                     self.GetCaptha = True
@@ -535,7 +540,7 @@ class CloudflareScraper(Session):
         #fh.close()
         
         if Mode_Debug:
-            xbmc.log('Trying decoding, pass ' + str(self.cf_tries) , xbmc.LOGNOTICE)
+            VSlog('Trying decoding, pass ' + str(self.cf_tries) )
             
             #fh = open('c:\\test.txt', "w")
             #fh.write(body)
@@ -586,7 +591,7 @@ class CloudflareScraper(Session):
             params["jschl_answer"] = '%.10f' % js_answer
 
         except Exception as e:
-            print ('error')
+            VSlog ('error')
             raise
 
         # Cloudflare requires a delay before solving the challenge.
@@ -599,9 +604,9 @@ class CloudflareScraper(Session):
         method = resp.request.method
         cloudflare_kwargs["allow_redirects"] = False
         
-        #xbmc.log('Trying :' + str(params), xbmc.LOGNOTICE)
-        #xbmc.log('With :' + str(cloudflare_kwargs['cookies']), xbmc.LOGNOTICE)
-        #xbmc.log('With :' + str(cloudflare_kwargs['headers']), xbmc.LOGNOTICE)
+        #VSlog('Trying :' + str(params))
+        #VSlog('With :' + str(cloudflare_kwargs['cookies']))
+        #VSlog('With :' + str(cloudflare_kwargs['headers']))
 
         #submit_url = 'http://httpbin.org/headers'
         
@@ -612,16 +617,15 @@ class CloudflareScraper(Session):
 
         #self.MemCookie.update( redirect.cookies.get_dict() )
         
-        xbmc.log( '>>>' + str( redirect.headers)   , xbmc.LOGNOTICE)
+        VSlog( '>>>' + str( redirect.headers)   )
         
-
         if 'Location' in redirect.headers:
             redirect_location = urlparse(redirect.headers["Location"])
             
             #if not redirect_location.netloc:
             #    redirect_url = "%s://%s%s" % (parsed_url.scheme, domain, redirect_location.path)
             #    response = self.request(method, redirect_url, **original_kwargs)
-            #    xbmc.log( '1' , xbmc.LOGNOTICE)
+            #    VSlog( '1' )
 
             if not redirect.headers["Location"].startswith('http'):
                 redirect = 'https://'+domain+redirect.headers["Location"]

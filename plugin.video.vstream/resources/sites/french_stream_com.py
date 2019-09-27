@@ -7,7 +7,7 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
-from resources.lib.comaddon import progress#, VSlog
+from resources.lib.comaddon import progress
 
 import re, base64, urllib
 
@@ -17,7 +17,7 @@ SITE_IDENTIFIER = 'french_stream_com'
 SITE_NAME = 'French-stream'
 SITE_DESC = 'Films, Séries & Mangas en streaming'
 
-URL_MAIN = 'https://www1.french-streaming.com/'
+URL_MAIN = 'https://www6.french-streaming.com/'
 
 URL_SEARCH_MOVIE = (URL_MAIN + 'index.php?do=search&subaction=search&catlist[]=9&story=', 'showMovies')
 URL_SEARCH_SERIE = (URL_MAIN + 'index.php?do=search&subaction=search&catlist[]=10&story=', 'showSeries')
@@ -117,10 +117,9 @@ def ResolveUrl(url):
         id = re.search(pat, url, re.DOTALL).group(1)
         hash = re.search(pat, url, re.DOTALL).group(2)
         hash = base64.b64decode(base64.b64decode(hash))
+ 
 
-        if id == '1':
-            url2 = 'http://cloudvid.co/embed-'
-        elif id == '2':
+        if id == '2':
             url2 = 'https://oload.stream/embed/'
         elif id == '3':
             url2 = 'https://vidlox.me/embed-'
@@ -334,9 +333,10 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    sPattern = 'film-ripz".+?href=".+?">([^<]+)<.+?film-verz".+?href.+?>([^<]+)<.+?href="([^"]+)".+?src="([^"]+)".+?class="short-title".+?>([^<]+)<'
+    sPattern = 'film-ripz".+?href=".+?">([^<]+)<.+?film-verz".+?href.+?>([^<]+)<.+?href="([^"]+)".+?src="([^"]+)".+?class="short-titl.+?>([^<]+)<'
 
     aResult = oParser.parse(sHtmlContent, sPattern)
+
     if (aResult[0] == False):
         oGui.addText(SITE_IDENTIFIER)
 
@@ -363,7 +363,7 @@ def showMovies(sSearch = ''):
             if sThumb.startswith ('/'):
                 sThumb = URL_MAIN[:-1] + sThumb
                 
-            sTitle = aEntry[4]
+            sTitle = aEntry[4].replace('en streaming', '').replace('Film ', '')
             sDisplayTitle = ('%s [%s] (%s)') % (sTitle, sQual, sLang)
 
             oOutputParameterHandler = cOutputParameterHandler()
@@ -379,7 +379,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -430,7 +430,7 @@ def showSeries(sSearch = ''):
             # else:
                 # sType = 'autre'
 
-            sTitle = aEntry[2].replace('- Saison', ' Saison')
+            sTitle = aEntry[2]
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
@@ -449,7 +449,7 @@ def showSeries(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showSeries', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showSeries', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()

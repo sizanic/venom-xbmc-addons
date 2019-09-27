@@ -7,16 +7,17 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
-from resources.lib.comaddon import progress,VSlog
+from resources.lib.comaddon import progress
 import urllib2, urllib, re
-import unicodedata
 
 #Je garde le nom kepliz pour pas perturber
 SITE_IDENTIFIER = 'kepliz_com'
 SITE_NAME = 'Kepliz'
 SITE_DESC = 'Films en streaming'
-URL_HOST = 'http://www.pirvox.com/'
-#URL_HOST = 'http://www.ozporo.com/'
+
+# Source compatible avec les clones : toblek, bofiaz, nimvon
+# mais pas compatible avec les clones, qui ont une redirection direct : sajbo, trozam, radego
+URL_HOST = 'http://www.wonior.com/'
 URL_MAIN = 'URL_MAIN'
 
 #pour l'addon
@@ -107,23 +108,27 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     oParser = cParser()
 
-    if sSearch :
+    if sSearch:
         #limite de caractere sinon bug de la recherche
         sSearch = sSearch[:20]
-        sUrl = URL_MAIN + 'index.php?ordering=&searchphrase=all&option=com_search&searchword=' + sSearch.replace(' ','+')
-        sPattern = '<div style="font-size:20px">.+?href="\/[0-9a-zA-Z]+\/(.+?)".+?>(.+?)</a>'
-    else :
+        sUrl = URL_MAIN + 'index.php?ordering=&searchphrase=all&option=com_search&searchword=' + sSearch.replace(' ', '+')
+    else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
-        sPattern = '<span style="list-style-type:none;" >.+? href="\/[0-9a-zA-Z]+\/(.+?)">(.+?)<\/a>'
 
+    # En cas de recherche direct OU lors de la navigation dans les differentes pages de résultats d'une recherche
+    if('searchword=' in sUrl) :
+        sPattern = '<h4><a href="\/[0-9a-zA-Z]+\/(.+?)"  >(.+?)<'
+    else:
+        sPattern = '<span style="list-style-type:none;" >.+? href="\/[0-9a-zA-Z]+\/(.+?)">(.+?)<\/a>'
+    
     #L'url change tres souvent donc faut la retrouver
     req = urllib2.Request(URL_HOST)
     response = urllib2.urlopen(req)
     data = response.read()
     response.close()
     sMainUrl = ''
-    aResult = oParser.parse(data, 'window\.location\.href="([0-9a-zA-Z]+)";')
+    aResult = oParser.parse(data, '<a.+?href="(/*[0-9a-zA-Z]+)"')   #Compatible avec plusieurs clones
 
     if aResult[0]:
         #memorisation pour la suite
@@ -172,7 +177,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sMainUrl + sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -200,7 +205,7 @@ def showHosters():
     #Recuperation info film, com et image
     sThumb = ''
     sDesc = ''
-    sPattern = '<div class="article-content"><p style="text-align: center;"><img src="(.+?)" border.+?<p style="text-align: left;">([^<>]+?)<\/p>'
+    sPattern = '<div class="article-content"><p style="text-align: center;"><img src="([^"]+)" border.+?<p style="text-align: left;">([^<>]+?)<\/p>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
@@ -212,12 +217,8 @@ def showHosters():
     sPostUrl = None
     sHtmlContent = sHtmlContent.replace('\r', '')
 
-    #fh = open('c:\\test.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
-
     #Format classique
-    sPattern = 'GRUDALpluginsphp\("player1",{link:"(.+?)"}\);'
+    sPattern = 'GRUDALpluginsphp\("player1",{link:"([^"]+)"}\);'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0]):
@@ -254,12 +255,12 @@ def showHosters():
             oOutputParameterHandler.addParameter('sLink', sLink)
             oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
 
-            oGui.addLink(SITE_IDENTIFIER, 'showHostersLink2', sMovieTitle, sThumb, sDesc, oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHostersLink2', sMovieTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
     #news Format
     if not sLink:
 
-        sPattern = '<iframe src="(.+?)"'
+        sPattern = '<iframe src="([^"]+)"'
         aResult = oParser.parse(sHtmlContent, sPattern)
         if (aResult[0]):
 
@@ -273,7 +274,7 @@ def showHosters():
             oOutputParameterHandler.addParameter('sLink', sLink)
             oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
 
-            oGui.addLink(SITE_IDENTIFIER, 'showHostersLink3', sMovieTitle, sThumb, sDesc, oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHostersLink3', sMovieTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -288,11 +289,11 @@ def showHostersLink():
 
     UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
     headers = {'User-Agent': UA,
-               'Host' : 'ozporo.com',
+               'Host': 'ozporo.com',
                'Referer': sUrl,
                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Language' : 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
-               'Accept-Encoding' : 'gzip, deflate',
+               'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+               'Accept-Encoding': 'gzip, deflate',
                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
 
     post_data = {'link' : sLink}
@@ -333,12 +334,12 @@ def showHostersLink2():
 
     UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
     headers = {'User-Agent': UA,
-               #'Host' : 'grudal.com',
+               #'Host': 'grudal.com',
                'Referer': sLink,
                'Accept': 'video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5',
-               'Accept-Language' : 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
-               'Range' : 'bytes=0-'
-               #'Accept-Encoding' : 'gzip, deflate',
+               'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+               'Range': 'bytes=0-'
+               #'Accept-Encoding': 'gzip, deflate',
                #'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                }
 
@@ -347,7 +348,7 @@ def showHostersLink2():
     data = response.read()
     response.close()
 
-    sPattern = '"file":"(.+?)","type":"mp4","label":"(.+?)"'
+    sPattern = '"file":"([^"]+)","type":"mp4","label":"([^"]+)"'
     aResult = oParser.parse(data, sPattern)
 
     if (aResult[0] == True):
@@ -356,7 +357,7 @@ def showHostersLink2():
 
             sLink2 = aEntry[0].replace('\/', '/')
             sQual = aEntry[1]
-            sTitle = sMovieTitle + '[ ' + sQual + ']'
+            sTitle = sMovieTitle + ' [' + sQual + ']'
 
             #decodage des liens
             req = urllib2.Request(sLink2, None, headers)
@@ -394,12 +395,12 @@ def showHostersLink3():
 
     UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
     headers = {'User-Agent': UA,
-               #'Host' : 'grudal.com',
+               #'Host': 'grudal.com',
                'Referer': sLink,
                'Accept': 'video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5',
                'Accept-Language' : 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
-               'Range' : 'bytes=0-'
-               #'Accept-Encoding' : 'gzip, deflate',
+               'Range': 'bytes=0-'
+               #'Accept-Encoding': 'gzip, deflate',
                #'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                }
 
@@ -409,11 +410,11 @@ def showHostersLink3():
     response = urllib2.urlopen(req)
     data = response.read()
     response.close()
-    
+
     # Recherche du premier lien
     sPattern = 'href=["\'](http[^"\']+)["\']'
     aResult = oParser.parse(data, sPattern)
-    
+
     #fh = open('c:\\test.txt', "w")
     #fh.write(data)
     #fh.close()
@@ -426,14 +427,14 @@ def showHostersLink3():
         # href = sLink + '/' + aResult[1][0] # concaténation du résultat avec le href trouvé via regex
         # VSlog(href)
 
-        #VSlog(aResult[1][0]) 
+        #VSlog(aResult[1][0])
         req = urllib2.Request(aResult[1][0], None, headers)
         response = urllib2.urlopen(req)
         data = response.read()
         response.close()
 
     #VSlog(data)
-    
+
     sPattern = 'file:"(.+?)".+?label:"(.+?)"'
     aResult = oParser.parse(data, sPattern)
 
@@ -470,7 +471,7 @@ def showHostersLink3():
             else:
                 sHosterUrl = str(sLink2)
                 oHoster = cHosterGui().checkHoster(sHosterUrl)
-                
+
             #VSlog(sHosterUrl)
 
             if (oHoster != False):
