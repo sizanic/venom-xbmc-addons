@@ -141,7 +141,7 @@ class cDb:
 
     def insert_watched(self, meta):
 
-        title = self.str_conv(meta['title'])
+        title = self.str_conv(meta['title']).replace(' ', '')
         site = urllib.quote_plus(meta['site'])
         ex = "INSERT INTO watched (title, site) VALUES (?, ?)"
         self.dbcur.execute(ex, (title,site))
@@ -186,8 +186,11 @@ class cDb:
 
     def get_watched(self, meta):        
         count = 0
-        site = urllib.quote_plus(meta['site'])
-        sql_select = "SELECT * FROM watched WHERE site = '%s'" % (site)
+        title = self.str_conv(meta['title']).replace(' ', '')
+        if not title:
+            return 0;
+        
+        sql_select = "SELECT * FROM watched WHERE title = '%s'" % (title)
 
         try:    
             self.dbcur.execute(sql_select)
@@ -225,8 +228,9 @@ class cDb:
     
     
     def del_watched(self, meta):
-        site = urllib.quote_plus(meta['site'])
-        sql_select = "DELETE FROM watched WHERE site = '%s'" % (site)
+#         title = urllib.quote_plus(meta['title'])
+        title = self.str_conv(meta['title']).strip()
+        sql_select = "DELETE FROM watched WHERE title = '%s'" % (title)
 
         try:    
             self.dbcur.execute(sql_select)
@@ -274,7 +278,7 @@ class cDb:
             
             self.db.commit() 
             
-            self.DIALOG.VSinfo('EnregistrÃ© avec succÃ©s', meta['title'])
+            self.DIALOG.VSinfo('Enregistré avec succés', meta['title'])
             VSlog('SQL INSERT favorite Successfully') 
         except Exception, e:
             if 'UNIQUE constraint failed' in e.message:
@@ -319,7 +323,7 @@ class cDb:
         try:    
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            self.DIALOG.VSinfo('Favoris supprimÃ©')
+            self.DIALOG.VSinfo('Favoris supprimé')
             xbmc.executebuiltin("Container.Refresh")
             return False, False
         except Exception, e:
@@ -386,7 +390,7 @@ class cDb:
         try:
             self.db.commit() 
             VSlog('SQL INSERT download Successfully') 
-            self.DIALOG.VSinfo('EnregistrÃ© avec succÃ©s', meta['title'])
+            self.DIALOG.VSinfo('Enregistré avec succés', meta['title'])
         except Exception, e:
             #print ('************* Error attempting to insert into %s cache table: %s ' % (table, e))
             VSlog('SQL ERROR INSERT') 
