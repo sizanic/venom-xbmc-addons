@@ -54,19 +54,19 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'SÃ©ries (Episode derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries (Episode derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SEASONS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SEASONS[1], 'SÃ©ries (Saison derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SEASONS[1], 'Séries (Saison derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'SÃ©ries (Toutes les sÃ©ries)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Séries (Toutes les séries)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'SÃ©ries (Liste)', 'listes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'Séries (Liste)', 'listes.png', oOutputParameterHandler)
     oGui.setEndOfDirectory()
 
 def showSearch():
@@ -87,7 +87,7 @@ def showGenres():
     liste.append( ['Action & Adventure', URL_MAIN + 'genre/action-adventure/'] )
     liste.append( ['Animation', URL_MAIN + 'genre/animation/'] )
     liste.append( ['Aventure', URL_MAIN + 'genre/aventure/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'genre/comedie/'] )
+    liste.append( ['Comédie', URL_MAIN + 'genre/comedie/'] )
     liste.append( ['Crime', URL_MAIN + 'genre/crime/'] )
     liste.append( ['Documentaire', URL_MAIN + 'genre/documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'genre/drame/'] )
@@ -97,11 +97,11 @@ def showGenres():
     liste.append( ['Histoire', URL_MAIN + 'genre/histoire/'] )
     liste.append( ['Horreur', URL_MAIN + 'genre/horreur/'] )
     liste.append( ['Musique', URL_MAIN + 'genre/musique/'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'genre/mystere/'] )
+    liste.append( ['Mystère', URL_MAIN + 'genre/mystere/'] )
     liste.append( ['Romance', URL_MAIN + 'genre/romance/'] )
     liste.append( ['Science Fiction', URL_MAIN + 'genre/science-fiction/'] )
     liste.append( ['Science Fiction & Fantastique', URL_MAIN + 'genre/science-fiction-fantastique/'] )
-    liste.append( ['TÃ©lÃ©film', URL_MAIN + 'genre/telefilm/'] )
+    liste.append( ['Téléfilm', URL_MAIN + 'genre/telefilm/'] )
     liste.append( ['Thriller', URL_MAIN + 'genre/thriller/'] )
     liste.append( ['Western', URL_MAIN + 'genre/western/'] )
 

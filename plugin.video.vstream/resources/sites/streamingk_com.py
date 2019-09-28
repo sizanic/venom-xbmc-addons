@@ -15,7 +15,7 @@ import re, unicodedata
 
 SITE_IDENTIFIER = 'streamingk_com'
 SITE_NAME = 'StreamingK'
-SITE_DESC = 'Films, SÃ©ries & Mangas en streaming. Tout les meilleurs streaming en illimitÃ©.'
+SITE_DESC = 'Films, Séries & Mangas en streaming. Tout les meilleurs streaming en illimité.'
 
 URL_MAIN = 'https://streamingk.net/'
 
@@ -61,35 +61,35 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', SERIE_VIEWS[0])
-    # oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'SÃ©ries (Les plus vues)', 'views.png', oOutputParameterHandler)
+    # oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'Séries (Les plus vues)', 'views.png', oOutputParameterHandler)
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', SERIE_COMMENTS[0])
-    # oGui.addDir(SITE_IDENTIFIER, SERIE_COMMENTS[1], 'SÃ©ries (Les plus commentÃ©es)', 'comments.png', oOutputParameterHandler)
+    # oGui.addDir(SITE_IDENTIFIER, SERIE_COMMENTS[1], 'Séries (Les plus commentées)', 'comments.png', oOutputParameterHandler)
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', SERIE_NOTES[0])
-    # oGui.addDir(SITE_IDENTIFIER, SERIE_NOTES[1], 'SÃ©ries (Les mieux notÃ©es)', 'notes.png', oOutputParameterHandler)
+    # oGui.addDir(SITE_IDENTIFIER, SERIE_NOTES[1], 'Séries (Les mieux notées)', 'notes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'SÃ©ries (Liste)', 'listes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'Séries (Liste)', 'listes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'SÃ©ries (VF)', 'vf.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'Séries (VF)', 'vf.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFR[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFR[1], 'SÃ©ries (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFR[1], 'Séries (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'AnimÃ©s (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Animés (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', REPLAYTV_NEWS[0])
@@ -116,8 +116,8 @@ def showGenres():
     liste.append( ['Arts Martiaux', URL_MAIN + 'category/films/arts-martiaux/'] )
     liste.append( ['Aventure', URL_MAIN + 'category/films/aventure-films/'] )
     liste.append( ['Biopic', URL_MAIN + 'category/films/biopic/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'category/films/comedie/'] )
-    liste.append( ['ComÃ©die Dramatique', URL_MAIN + 'category/films/comedie-dramatique/'] )
+    liste.append( ['Comédie', URL_MAIN + 'category/films/comedie/'] )
+    liste.append( ['Comédie Dramatique', URL_MAIN + 'category/films/comedie-dramatique/'] )
     liste.append( ['Documentaire', URL_MAIN + 'category/documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'category/films/drame/'] )
     liste.append( ['Espionnage', URL_MAIN + 'category/films/espionnage/'] )
@@ -190,7 +190,7 @@ def showMovies(sSearch = ''):
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == False):
-		oGui.addText(SITE_IDENTIFIER)
+        oGui.addText(SITE_IDENTIFIER)
 
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -211,7 +211,7 @@ def showMovies(sSearch = ''):
             sTitle = sTitle.replace(' [Streaming]', '')
             sTitle = sTitle.replace(' [Telecharger]', '').replace(' [Telechargement]', '')
             sDisplayTitle = sTitle
-            #on retire la qualitÃ©
+            #on retire la qualité
             sTitle = re.sub('\[\w+]', '', sTitle)
             sTitle = re.sub('\[\w+ \w+]', '', sTitle)
             sThumb = aEntry[2]
@@ -278,7 +278,7 @@ def showSeries(sLoop = False):
     sHtmlContent = sHtmlContent.replace('<b> </b> ', '')
     sHtmlContent = sHtmlContent.replace('<span class="su-lightbox" data-mfp-src', '<a href')
 
-    #rÃ©cupÃ©ration du Synopsis
+    #récupération du Synopsis
     sDesc = ''
     try:
         sPattern = '</p><p style="text-align: center;">([^<]+)<\/p><p style="text-align: center;">'
@@ -334,7 +334,7 @@ def showHosters(sLoop = False):
 
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    #RÃ©Ã©criture de sHtmlContent pour rÃ©cuperer la qualitÃ©
+    #Réécriture de sHtmlContent pour récuperer la qualité
     sHtmlContent = sHtmlContent.replace('<span style="color: #ff9900;"><strong>', '<strong><span style="color: #ff9900;">')
 
     oParser = cParser()
@@ -356,11 +356,11 @@ def showHosters(sLoop = False):
 
             else:
                 sHosterUrl = aEntry[1]
-                #pour rÃ©cuperer tous les liens
+                #pour récuperer tous les liens
                 if '&url=' in sHosterUrl:
                     sHosterUrl = sHosterUrl.split('&url=')[1]
 
-                #pour rÃ©cuperer le lien jwplayer(GoogleDrive)
+                #pour récuperer le lien jwplayer(GoogleDrive)
                 if 'filmhdstream' in sHosterUrl:
                     oRequestHandler = cRequestHandler(sHosterUrl)
                     sHtmlContent = oRequestHandler.request()
@@ -376,7 +376,7 @@ def showHosters(sLoop = False):
                                 oHoster.setFileName(sMovieTitle)
                                 cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumb)
 
-                #pour rÃ©cuperer les liens jheberg
+                #pour récuperer les liens jheberg
                 elif 'jheberg' in sHosterUrl:
                     aResult = cJheberg().GetUrls(sHosterUrl)
                     if aResult:
@@ -414,11 +414,11 @@ def serieHosters():
         for aEntry in aResult[1]:
 
             sHosterUrl = aEntry
-            #pour rÃ©cuperer tous les liens
+            #pour récuperer tous les liens
             if '&url=' in sHosterUrl:
                 sHosterUrl = sHosterUrl.split('&url=')[1]
 
-            #pour rÃ©cuperer le lien jwplayer(GoogleDrive)
+            #pour récuperer le lien jwplayer(GoogleDrive)
             if 'filmhdstream' in sHosterUrl:
                 oRequestHandler = cRequestHandler(sHosterUrl)
                 sHtmlContent = oRequestHandler.request()
@@ -434,7 +434,7 @@ def serieHosters():
                             oHoster.setFileName(sMovieTitle)
                             cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumb)
 
-            #pour rÃ©cuperer les liens jheberg
+            #pour récuperer les liens jheberg
             elif 'jheberg' in sHosterUrl:
                 aResult = cJheberg().GetUrls(sHosterUrl)
                 if aResult:

@@ -82,7 +82,7 @@ class cJheberg:
             return False
 
         for item in r:
-            if not 'ERROR' in item[2]:
+            if not 'ERROR' in item[2] and not 'Free' in item[1]: #TODO chez FREE c'est directement la vidéo
                 urllink = 'https://download.jheberg.net/redirect/' + idFile + '-' + item[0]
                 try:
                     url = GetHtml(urllink)

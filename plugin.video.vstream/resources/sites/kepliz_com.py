@@ -15,7 +15,7 @@ SITE_IDENTIFIER = 'kepliz_com'
 SITE_NAME = 'Kepliz'
 SITE_DESC = 'Films en streaming'
 
-# Source compatible avec les clones : toblek, bofiaz, nimvon
+# Source compatible avec les clones : sajbo, // toblek, bofiaz, nimvon
 # mais pas compatible avec les clones, qui ont une redirection direct : sajbo, trozam, radego
 URL_HOST = 'http://www.wonior.com/'
 URL_MAIN = 'URL_MAIN'
@@ -57,7 +57,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'AnimÃ©s (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Animés (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', DOC_NEWS[0])
@@ -86,7 +86,7 @@ def showGenres():
     liste.append( ['Action', URL_MAIN + 'index.php?option=com_content&view=category&id=1'] )
     liste.append( ['Animation', URL_MAIN + 'index.php?option=com_content&view=category&id=2'] )
     liste.append( ['Aventure', URL_MAIN + 'index.php?option=com_content&view=category&id=4'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'index.php?option=com_content&view=category&id=6'] )
+    liste.append( ['Comédie', URL_MAIN + 'index.php?option=com_content&view=category&id=6'] )
     liste.append( ['Documentaires', URL_MAIN + 'index.php?option=com_content&view=category&id=26'] )
     liste.append( ['Drame', URL_MAIN + 'index.php?option=com_content&view=category&id=7'] )
     liste.append( ['Epouvante Horreur', URL_MAIN + 'index.php?option=com_content&view=category&id=9'] )
@@ -116,7 +116,7 @@ def showMovies(sSearch = ''):
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
 
-    # En cas de recherche direct OU lors de la navigation dans les differentes pages de rÃ©sultats d'une recherche
+    # En cas de recherche direct OU lors de la navigation dans les differentes pages de résultats d'une recherche
     if('searchword=' in sUrl) :
         sPattern = '<h4><a href="\/[0-9a-zA-Z]+\/(.+?)"  >(.+?)<'
     else:
@@ -128,11 +128,12 @@ def showMovies(sSearch = ''):
     data = response.read()
     response.close()
     sMainUrl = ''
-    aResult = oParser.parse(data, '<a.+?href="(/*[0-9a-zA-Z]+)"')   #Compatible avec plusieurs clones
+#    aResult = oParser.parse(data, '<a.+?href="(/*[0-9a-zA-Z]+)"')   #Compatible avec plusieurs clones
+    aResult = oParser.parse(data, '(<a.+?href="(\/*[0-9a-zA-Z]+)"|window\.location\.href="(.+?)")')
 
     if aResult[0]:
         #memorisation pour la suite
-        sMainUrl = URL_HOST + aResult[1][0] + '/'
+        sMainUrl = URL_HOST + aResult[1][0][2] + '/'
         #correction de l'url
         sUrl = sUrl.replace('URL_MAIN', sMainUrl)
     else:
@@ -422,9 +423,9 @@ def showHostersLink3():
     # Si il existe, suivi du lien
     if ( aResult[0] == True ):
         # VSlog(aResult[1][0])
-        # sLink = sLink.rsplit('/', 1)[0] # supprime la derniÃ¨re partie de l'url de l'iframe
+        # sLink = sLink.rsplit('/', 1)[0] # supprime la dernière partie de l'url de l'iframe
         # VSlog(sLink)
-        # href = sLink + '/' + aResult[1][0] # concatÃ©nation du rÃ©sultat avec le href trouvÃ© via regex
+        # href = sLink + '/' + aResult[1][0] # concaténation du résultat avec le href trouvé via regex
         # VSlog(href)
 
         #VSlog(aResult[1][0])

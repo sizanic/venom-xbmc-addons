@@ -1,6 +1,5 @@
 #-*- coding: utf-8 -*-
 #Vstream https://github.com/Kodi-vStream/venom-xbmc-addons
-return False
 from resources.lib.gui.hoster import cHosterGui
 from resources.lib.gui.gui import cGui
 from resources.lib.gui.guiElement import cGuiElement
@@ -14,9 +13,9 @@ import urllib2, re, base64
 
 SITE_IDENTIFIER = 'fullstream'
 SITE_NAME = 'FullStream'
-SITE_DESC = 'Films, SÃ©ries et Mangas Gratuit en streaming sur Full stream'
+SITE_DESC = 'Films, Séries et Mangas Gratuit en streaming sur Full stream'
 
-URL_MAIN = 'https://w4.full-stream.cc/'
+URL_MAIN = 'https://vfspace.me/'
 
 URL_SEARCH = (URL_MAIN + 'wp-json/dooplay/search/?keyword=', 'AlphaDisplay')
 URL_SEARCH_MOVIES = (URL_SEARCH[0], 'AlphaDisplay')
@@ -47,7 +46,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_GENRES[1], 'Films & SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_GENRES[1], 'Films & Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_LIST[0])
@@ -55,19 +54,19 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'SÃ©ries', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Séries', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NETFLIX[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NETFLIX[1], 'SÃ©ries Netflix', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NETFLIX[1], 'Séries Netflix', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'SÃ©ries (Liste) ', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'Séries (Liste) ', 'az.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -169,7 +168,7 @@ def showGenres():
     liste.append( ['Action', URL_MAIN + 'genre/action'] )
     liste.append( ['Animation', URL_MAIN + 'genre/animation'] )
     liste.append( ['Aventure', URL_MAIN + 'genre/aventure'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'genre/comedie'] )
+    liste.append( ['Comédie', URL_MAIN + 'genre/comedie'] )
     liste.append( ['Crime', URL_MAIN + 'genre/crime'] )
     liste.append( ['Drame', URL_MAIN + 'genre/drame'] )
     liste.append( ['Horreur', URL_MAIN + 'genre/horreur'] )
@@ -177,7 +176,7 @@ def showGenres():
     liste.append( ['Fantastique', URL_MAIN + 'genre/fantastique'] )
     liste.append( ['Guerre', URL_MAIN + 'genre/guerre'] )
     liste.append( ['Histoire', URL_MAIN + 'genre/histoire'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'genre/mystere'] )
+    liste.append( ['Mystère', URL_MAIN + 'genre/mystere'] )
     liste.append( ['Romance', URL_MAIN + 'genre/romance'] )
     liste.append( ['Science Fiction & Fantastique', URL_MAIN + 'genre/science-fiction-fantastique'] )
     liste.append( ['Science Fiction', URL_MAIN + 'genre/science-fiction'] )
@@ -398,32 +397,32 @@ def showHosters():
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
-    	if 'vidi.php' in str(aResult[1][0]):
-    		sPattern = "vid=([^']+)'"
-    		aResult = oParser.parse(sHtmlContent, sPattern)
+        if 'vidi.php' in str(aResult[1][0]):
+            sPattern = "vid=([^']+)'"
+            aResult = oParser.parse(sHtmlContent, sPattern)
 
-    		sHosterUrl = base64.b64decode(aResult[1][0])
-    	else:
-	        sUrl = URL_MAIN[:-1] + aResult[1][0]
+            sHosterUrl = base64.b64decode(aResult[1][0])
+        else:
+            sUrl = URL_MAIN[:-1] + aResult[1][0]
 
-	        UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
-	        headers = {'User-Agent': UA, 'Referer': sRef, 'Cookie': cooka}
-	        req = urllib2.Request(sUrl, None, headers)
+            UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
+            headers = {'User-Agent': UA, 'Referer': sRef, 'Cookie': cooka}
+            req = urllib2.Request(sUrl, None, headers)
 
-	        try:
-	            response = urllib2.urlopen(req)
-	        except urllib2.URLError, e:
-	            return ''
+            try:
+                response = urllib2.urlopen(req)
+            except urllib2.URLError, e:
+                return ''
 
-	        sHosterUrl = ''
-	        if not response.geturl() == sUrl:
-	            sHosterUrl = response.geturl()
-	        else:
-	            c = str(response.read())
-	            sPattern = 'src="([^"]+)"'
-	            aResult = oParser.parse(c, sPattern)
-	            if aResult[0]:
-	                sHosterUrl = aResult[1][0]
+            sHosterUrl = ''
+            if not response.geturl() == sUrl:
+                sHosterUrl = response.geturl()
+            else:
+                c = str(response.read())
+                sPattern = 'src="([^"]+)"'
+                aResult = oParser.parse(c, sPattern)
+                if aResult[0]:
+                    sHosterUrl = aResult[1][0]
 
         oHoster = cHosterGui().checkHoster(sHosterUrl)
         if (oHoster != False):
