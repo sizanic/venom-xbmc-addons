@@ -16,6 +16,21 @@ from resources.lib.comaddon import progress, VSlog, addon, window, xbmc
 #http://kodi.wiki/view/InfoLabels
 #http://kodi.wiki/view/List_of_boolean_conditions
 
+import sys
+sys.path.append('H:\Program Files (x86)\Kodi-18\system\Python\Lib\pysrc')
+
+# append pydev remote debugger
+REMOTE_DBG = False
+if REMOTE_DBG:
+    # Make pydev debugger works for auto reload.
+    # Note pydevd module need to be copied in XBMC\system\python\Lib\pysrc
+    try:
+        import pysrc.pydevd as pydevd # with the addon script.module.pydevd, only use `import pydevd`
+        pydevd.settrace('localhost', stdoutToServer=True, stderrToServer=True)
+    except ImportError:
+        sys.stderr.write("Error: " + "You must add org.python.pydev.debug.pysrc to your PYTHONPATH.")
+
+
 class main:
     def __init__(self):
         self.parseUrl()
