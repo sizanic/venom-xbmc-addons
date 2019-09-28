@@ -140,8 +140,13 @@ class cDb:
         self.db.close()  
 
     def insert_watched(self, meta):
+        if not meta['title']:
+            return
 
         title = self.str_conv(meta['title']).replace(' ', '')
+        if not title:
+            return 0
+
         site = urllib.quote_plus(meta['site'])
         ex = "INSERT INTO watched (title, site) VALUES (?, ?)"
         self.dbcur.execute(ex, (title,site))
@@ -185,10 +190,12 @@ class cDb:
         self.dbcur.close()
 
     def get_watched(self, meta):        
-        count = 0
+        if not meta['title']:
+            return 0
+        
         title = self.str_conv(meta['title']).replace(' ', '')
         if not title:
-            return 0;
+            return 0
         
         sql_select = "SELECT * FROM watched WHERE title = '%s'" % (title)
 
@@ -198,10 +205,8 @@ class cDb:
             matchedrow = self.dbcur.fetchall()
 
             if matchedrow:
-                count = 1
-            else:
-                count = 0    
-            return count        
+                return 1
+            return 0
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return None
@@ -228,8 +233,11 @@ class cDb:
     
     
     def del_watched(self, meta):
-#         title = urllib.quote_plus(meta['title'])
-        title = self.str_conv(meta['title']).strip()
+        if not meta['title']:
+            return
+        title = self.str_conv(meta['title']).replace(' ', '')
+        if not title:
+            return;
         sql_select = "DELETE FROM watched WHERE title = '%s'" % (title)
 
         try:    
@@ -278,7 +286,7 @@ class cDb:
             
             self.db.commit() 
             
-            self.DIALOG.VSinfo('Enregistré avec succés', meta['title'])
+            self.DIALOG.VSinfo('EnregistrÃ© avec succÃ©s', meta['title'])
             VSlog('SQL INSERT favorite Successfully') 
         except Exception, e:
             if 'UNIQUE constraint failed' in e.message:
@@ -323,7 +331,7 @@ class cDb:
         try:    
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            self.DIALOG.VSinfo('Favoris supprimé')
+            self.DIALOG.VSinfo('Favoris supprimÃ©')
             xbmc.executebuiltin("Container.Refresh")
             return False, False
         except Exception, e:
@@ -390,7 +398,7 @@ class cDb:
         try:
             self.db.commit() 
             VSlog('SQL INSERT download Successfully') 
-            self.DIALOG.VSinfo('Enregistré avec succés', meta['title'])
+            self.DIALOG.VSinfo('EnregistrÃ© avec succÃ©s', meta['title'])
         except Exception, e:
             #print ('************* Error attempting to insert into %s cache table: %s ' % (table, e))
             VSlog('SQL ERROR INSERT') 

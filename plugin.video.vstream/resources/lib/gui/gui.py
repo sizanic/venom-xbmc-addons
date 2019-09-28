@@ -46,10 +46,12 @@ class cGui():
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
-
-        self.addFolder(oGuiElement, oOutputParameterHandler)
-
-	# Coffret et integrale de films
+            
+        try:
+            self.addFolder(oGuiElement, oOutputParameterHandler)
+        except: pass
+            
+    # Coffret et integrale de films
     def addMoviePack(self, sId, sFunction, sLabel, sIcon, sThumbnail, sDesc, oOutputParameterHandler = ''):
         cGui.CONTENT = "movies"
         oGuiElement = cGuiElement()
@@ -117,6 +119,7 @@ class cGui():
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
 
+        oOutputParameterHandler.addParameter('sFileName', sTitle)
         self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
         #self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
         self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
@@ -293,6 +296,8 @@ class cGui():
 
         sItemUrl = self.__createItemUrl(oGuiElement, oOutputParameterHandler)
 
+        oOutputParameterHandler.addParameter('sFileName', oGuiElement.getFileName())
+
         #new context prend en charge les metas
         if (oGuiElement.getMeta() > 0):
             if cGui.CONTENT == "movies":
@@ -324,7 +329,7 @@ class cGui():
 
         oListItem = self.__createContextMenu(oGuiElement, oListItem)
 
-        sPluginHandle = cPluginHandler().getPluginHandle()
+        #sPluginHandle = cPluginHandler().getPluginHandle()
         #modif 22/06
         #xbmcplugin.addDirectoryItem(sPluginHandle, sItemUrl, oListItem, isFolder=_isFolder)
         self.listing.append((sItemUrl, oListItem, _isFolder))
@@ -342,6 +347,7 @@ class cGui():
         aProperties = oGuiElement.getItemProperties()
         for sPropertyKey in aProperties.keys():
             oListItem.setProperty(sPropertyKey, aProperties[sPropertyKey])
+        oListItem.setProperty('fileName', oGuiElement.getFileName())
 
         return oListItem
 
@@ -493,7 +499,7 @@ class cGui():
         sPluginPath = cPluginHandler().getPluginPath()
         aContextMenus = []
 
-        #Menus classiques reglÃ©s a la base
+        #Menus classiques reglés a la base
         if (len(oGuiElement.getContextItems()) > 0):
             for oContextItem in oGuiElement.getContextItems():
                 oOutputParameterHandler = oContextItem.getOutputParameterHandler()
@@ -655,7 +661,7 @@ class cGui():
             aParams = oInputParameterHandler.getAllParameter()
 
             sSite = oInputParameterHandler.getValue('siteUrl')
-            sTitle = xbmc.getInfoLabel('ListItem.label')
+            sTitle = oInputParameterHandler.getValue('sFileName')
 
             meta = {}
             meta['title'] = sTitle
