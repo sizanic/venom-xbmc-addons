@@ -278,7 +278,7 @@ class cDb:
             
             self.db.commit() 
             
-            self.DIALOG.VSinfo('Enregistré avec succés', meta['title'])
+            self.DIALOG.VSinfo('EnregistrÃ© avec succÃ¨s', meta['title'])
             VSlog('SQL INSERT favorite Successfully') 
         except Exception, e:
             if 'UNIQUE constraint failed' in e.message:
@@ -323,7 +323,7 @@ class cDb:
         try:    
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            self.DIALOG.VSinfo('Favoris supprimé')
+            self.DIALOG.VSinfo('Favoris supprimÃ©')
             xbmc.executebuiltin("Container.Refresh")
             return False, False
         except Exception, e:
@@ -390,7 +390,7 @@ class cDb:
         try:
             self.db.commit() 
             VSlog('SQL INSERT download Successfully') 
-            self.DIALOG.VSinfo('Enregistré avec succés', meta['title'])
+            self.DIALOG.VSinfo('EnregistrÃ© avec succÃ¨s', meta['title'])
         except Exception, e:
             #print ('************* Error attempting to insert into %s cache table: %s ' % (table, e))
             VSlog('SQL ERROR INSERT') 
