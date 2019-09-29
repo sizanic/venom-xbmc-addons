@@ -133,7 +133,7 @@ def showMovies(sSearch = ''):
 
     if aResult[0]:
         #memorisation pour la suite
-        sMainUrl = URL_HOST + aResult[1][0][2] + '/'
+        sMainUrl = URL_HOST + aResult[1][0][1] + aResult[1][0][2] + '/'
         #correction de l'url
         sUrl = sUrl.replace('URL_MAIN', sMainUrl)
     else:
