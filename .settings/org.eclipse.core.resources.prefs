@@ -56,5 +56,6 @@ encoding//resources/sites/wordpress.py=utf-8
 encoding//resources/sites/youtube.py=utf-8
 encoding//resources/sites/zone_telechargement_ws.py=utf-8
 encoding//resources/sites/zonestreaming.py=utf-8
+encoding/<project>=UTF-8
 encoding/default.py=utf-8
 encoding/resources=UTF-8
