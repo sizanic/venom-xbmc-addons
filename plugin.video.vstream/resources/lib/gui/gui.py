@@ -667,13 +667,14 @@ class cGui():
             meta['title'] = sTitle
             meta['site'] = sSite
 
-            row = cDb().get_watched(meta)
+            db = cDb()
+            row = db.get_watched(meta)
             if row:
-                cDb().del_watched(meta)
-                cDb().del_resume(meta)
+                db.del_watched(meta)
+                db.del_resume(meta)
             else:
-                cDb().insert_watched(meta)
-                
+                db.insert_watched(meta)
+
             xbmc.executebuiltin( 'Action(ToggleWatched)' )
             
         else:

@@ -53,6 +53,7 @@ class cTMDb:
                 self.db.row_factory = sqlite.Row
                 self.dbcur = self.db.cursor()
                 self.__createdb()
+                return
         except:
             VSlog('erreur: Impossible d ecrire sur %s' % self.REALCACHE )
             pass
@@ -159,8 +160,9 @@ class cTMDb:
         ''' Cleanup db when object destroyed '''
         try:
             self.dbcur.close()
-            self.dbcon.close()
-        except: pass
+            self.db.close()
+        except:
+            pass
 
 
     def getToken(self):
@@ -530,7 +532,6 @@ class cTMDb:
         except Exception, e:
             VSlog('SQL ERROR INSERT')
             pass
-        self.db.close()
 
     def _cache_save_season(self, meta, season):
 
