@@ -286,7 +286,10 @@ class cGuiElement:
 
     def setTitle(self, sTitle):
         self.__sCleanTitle = sTitle
-        self.__sTitle = self.TraiteTitre(sTitle)
+        if not sTitle.startswith('[COLOR') :
+            self.__sTitle = self.TraiteTitre(sTitle)
+        else:
+            self.__sTitle = sTitle
 
     def getTitle(self):
         return self.__sTitle
