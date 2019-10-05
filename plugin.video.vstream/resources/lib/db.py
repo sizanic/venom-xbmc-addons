@@ -42,7 +42,7 @@ class cDb:
         except:
             VSlog('erreur: Impossible d ecrire sur %s' % self.REALDB )
             pass
-
+                return
         try:
             self.db = sqlite.connect(self.REALDB)
             self.db.row_factory = sqlite.Row
@@ -51,15 +51,13 @@ class cDb:
             VSlog('erreur: Impossible de ce connecter sur %s' % self.REALDB )
             pass
 
-        
-      
-
     def __del__(self):
         ''' Cleanup db when object destroyed '''
         try:
             self.dbcur.close()
-            self.dbcon.close()
-        except: pass
+            self.db.close()
+        except Exception, e:
+            pass
 
     def _create_tables(self):
 
@@ -307,7 +305,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return None
-        self.dbcur.close()
 
     def del_favorite(self):
         
@@ -337,7 +334,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close() 
 
 #non utiliser ?
 
@@ -403,7 +399,6 @@ class cDb:
             #print ('************* Error attempting to insert into %s cache table: %s ' % (table, e))
             VSlog('SQL ERROR INSERT') 
             pass
-        self.db.close()
         
     def get_Download(self, meta = ''):
     
@@ -420,7 +415,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return None
-        self.dbcur.close()
         
     def clean_download(self):
 
@@ -433,7 +427,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close()
  
     def reset_download(self, meta):
 
@@ -447,7 +440,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close()     
         
     def del_download(self, meta):
 
@@ -467,7 +459,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close()
         
     def Cancel_download(self):
         sql_select = "UPDATE download SET status = '0' WHERE status = '1'"
@@ -478,7 +469,6 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close()   
         
     def update_download(self, meta):
     
@@ -496,4 +486,3 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close()    
