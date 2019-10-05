@@ -137,8 +137,10 @@ class cDb:
             pass
 
     def insert_watched(self, meta):
+        title = meta['title']
+        if not title:
+            return
 
-        title = self.str_conv(meta['title'])
         site = urllib.quote_plus(meta['site'])
         ex = "INSERT INTO watched (title, site) VALUES (?, ?)"
         self.dbcur.execute(ex, (title,site))
@@ -151,7 +153,6 @@ class cDb:
             pass
 
     def get_history(self):
-    
         sql_select = "SELECT * FROM history"
 
         try:    
@@ -177,11 +178,13 @@ class cDb:
         except Exception, e:
             VSlog('SQL ERROR EXECUTE') 
             return None
-        self.dbcur.close()
 
     def get_watched(self, meta):        
-        site = urllib.quote_plus(meta['site'])
-        sql_select = "SELECT * FROM watched WHERE site = '%s'" % (site)
+        title = meta['title']
+        if not title:
+            return None
+        
+        sql_select = "SELECT * FROM watched WHERE title = '%s'" % (title)
 
         try:    
             self.dbcur.execute(sql_select)
@@ -196,7 +199,6 @@ class cDb:
             return None
 
     def del_history(self):
-    
         oInputParameterHandler = cInputParameterHandler()    
         if (oInputParameterHandler.exist('searchtext')):
             sql_delete = "DELETE FROM history WHERE title = '%s'" % (oInputParameterHandler.getValue('searchtext'))
@@ -215,9 +217,11 @@ class cDb:
     
     
     def del_watched(self, meta):
-        site = urllib.quote_plus(meta['site'])
-        sql_select = "DELETE FROM watched WHERE site = '%s'" % (site)
+        title = meta['title']
+        if not title:
+            return
 
+        sql_select = "DELETE FROM watched WHERE title = '%s'" % (title)
         try:    
             self.dbcur.execute(sql_select)
             self.db.commit()

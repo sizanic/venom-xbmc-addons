@@ -86,14 +86,6 @@ class cGui():
         #oGuiElement.setTvFanart()
         oGuiElement.setCat(2)
 
-        # if oOutputParameterHandler.getValue('season'):
-            # sSeason = oOutputParameterHandler.getValue('season')
-            # oGuiElement.addItemValues('Season', sSeason)
-
-        # if oOutputParameterHandler.getValue('episode'):
-            # sSeason = oOutputParameterHandler.getValue('episode')
-            # oGuiElement.addItemValues('Episode', sSeason)
-
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
@@ -296,7 +288,7 @@ class cGui():
 
         sItemUrl = self.__createItemUrl(oGuiElement, oOutputParameterHandler)
 
-        oOutputParameterHandler.addParameter('sFileName', oGuiElement.getFileName())
+        oOutputParameterHandler.addParameter('sTitleWatched', oGuiElement.getTitleWatched())
 
         #new context prend en charge les metas
         if (oGuiElement.getMeta() > 0):
@@ -368,6 +360,9 @@ class cGui():
         oListItem.addStreamInfo('video', {})
 
         sItemUrl = self.__createItemUrl(oGuiElement, oOutputParameterHandler)
+
+        oOutputParameterHandler.addParameter('sTitleWatched', oGuiElement.getTitleWatched())
+        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
 
         oListItem = self.__createContextMenu(oGuiElement, oListItem)
 
@@ -655,13 +650,12 @@ class cGui():
 
     def setWatched(self):
         if (True):
-            #Use database
+            #Use VStream database
             oInputParameterHandler = cInputParameterHandler()
-
-            aParams = oInputParameterHandler.getAllParameter()
-
             sSite = oInputParameterHandler.getValue('siteUrl')
-            sTitle = oInputParameterHandler.getValue('sFileName')
+            sTitle = oInputParameterHandler.getValue('sTitleWatched')
+            if not sTitle:
+                return
 
             meta = {}
             meta['title'] = sTitle
@@ -675,7 +669,7 @@ class cGui():
             else:
                 db.insert_watched(meta)
 
-            xbmc.executebuiltin( 'Action(ToggleWatched)' )
+            xbmc.executebuiltin( 'Container.Refresh' )
             
         else:
             # Use kodi buildin feature

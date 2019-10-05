@@ -9,8 +9,6 @@ from resources.lib.comaddon import addon, dialog, xbmc, isKrypton, VSlog
 
 import xbmcplugin
 
-import time
-
 #pour les sous titres
 #https://github.com/amet/service.subtitles.demo/blob/master/service.subtitles.demo/service.py
 #player API
@@ -56,9 +54,9 @@ class cPlayer(xbmc.Player):
         oGui = cGui()
         oListItem =  oGui.createListItem(oGuiElement)
         self.__addItemToPlaylist(oGuiElement, oListItem)
-	
+    
     def __addItemToPlaylist(self, oGuiElement, oListItem):    
-        oPlaylist = self.__getPlayList()	
+        oPlaylist = self.__getPlayList()    
         oPlaylist.add(oGuiElement.getMediaUrl(), oListItem )
         
     def AddSubtitles(self,files):
@@ -102,7 +100,7 @@ class cPlayer(xbmc.Player):
                 xbmcplugin.setResolvedUrl(sPluginHandle, True, listitem=item)
                 VSlog('Player use inputstream addon')
             else:
-                dialog().VSerror('N√©cessite kodi 17 minimum')
+                dialog().VSerror('NÈcessite kodi 17 minimum')
                 return
         #1 er mode de lecture
         elif (player_conf == '0'):
@@ -127,19 +125,19 @@ class cPlayer(xbmc.Player):
         if (self.SubtitleActive):
             if (self.ADDON.getSetting("srt-view") == 'true'):
                 self.showSubtitles(True)
-                self.DIALOG.VSinfo("Sous titre charges", "Sous-Titres", 5)
+                self.DIALOG.VSinfo("Sous-titres charges", "Sous-Titres", 5)
             else:
                 self.showSubtitles(False)
-                self.DIALOG.VSinfo("Sous titre charges, Vous pouvez les activer", "Sous-Titres", 15)
-		
-       
+                self.DIALOG.VSinfo("Sous-titres charges, vous pouvez les activer", "Sous-Titres", 15)
+
+
         while self.isPlaying() and not self.forcestop:
         #while not xbmc.abortRequested:
             try:
-               self.currentTime = self.getTime()
-               self.totalTime = self.getTotalTime()
+                self.currentTime = self.getTime()
+                self.totalTime = self.getTotalTime()
                
-               #xbmc.log(str(self.currentTime))
+                #xbmc.log(str(self.currentTime))
                
             except:
                 pass
@@ -172,16 +170,24 @@ class cPlayer(xbmc.Player):
         VSlog("player stoped")
         
         self.playBackStoppedEventReceived = True
+        
+        #calcul le temp de lecture
+        pourcent =  float("%.2f" % (self.currentTime / self.totalTime))
+        if (pourcent > 0.90):
+            
+            # MarquÈ VU dans la BDD Vstream
+            cGui().setWatched()
 
-        try:
-            tmdb_session = self.ADDON.getSetting('tmdb_session')
-            if tmdb_session:
-                self.__getWatchlist('tmdb')
-            bstoken = self.ADDON.getSetting("bstoken")
-            if bstoken:
-                self.__getWatchlist('trakt')
-        except:
-            pass
+            # MarquÈ VU dans les comptes perso
+            try:
+                tmdb_session = self.ADDON.getSetting('tmdb_session')
+                if tmdb_session:
+                    self.__getWatchlist('tmdb')
+                bstoken = self.ADDON.getSetting("bstoken")
+                if bstoken:
+                    self.__getWatchlist('trakt')
+            except:
+                pass
 
         #xbmc.executebuiltin( 'Container.Refresh' )
         
@@ -198,19 +204,15 @@ class cPlayer(xbmc.Player):
 
     def __getWatchlist(self, sAction):
 
-        #calcul le temp de lecture
-        pourcent =  float("%.2f" % (self.currentTime / self.totalTime))
-
-        if (pourcent > 0.90):
-            if sAction == 'tmdb':
-                plugins = __import__('resources.sites.themoviedb_org', fromlist=['themoviedb_org'])
-                function = getattr(plugins, 'getWatchlist')
-                function()
-            elif sAction == 'trakt':
-                #plugins = __import__('resources.lib.trakt', fromlist=['cTrakt'])
-                plugins = __import__('resources.lib.trakt', fromlist=['trakt']).cTrakt()
-                function = getattr(plugins, 'getWatchlist')
-                function()
+        if sAction == 'tmdb':
+            plugins = __import__('resources.sites.themoviedb_org', fromlist=['themoviedb_org'])
+            function = getattr(plugins, 'getWatchlist')
+            function()
+        elif sAction == 'trakt':
+            #plugins = __import__('resources.lib.trakt', fromlist=['cTrakt'])
+            plugins = __import__('resources.lib.trakt', fromlist=['trakt']).cTrakt()
+            function = getattr(plugins, 'getWatchlist')
+            function()
             
         return
 
@@ -246,4 +248,4 @@ class cPlayer(xbmc.Player):
             query = xbmc.executeJSONRPC(do_json)
             VSlog("Activation d'inputstream.adaptive")
         else:
-            VSlog('inputstream.adaptive d√©j√† activ√©')
+            VSlog('inputstream.adaptive dÈj‡ activÈ')

@@ -328,7 +328,7 @@ class CloudflareBypass(object):
             VSlog('url ' + url)
             if (htmlcontent):
                 VSlog('code html ok')
-            VSlog('cookies passÃ©s' + self.Memorised_Cookies)
+            VSlog('cookies passés' + self.Memorised_Cookies)
             VSlog('post data :' + str(postdata))
 
         self.hostComplet = re.sub(r'(https*:\/\/[^/]+)(\/*.*)','\\1',url)

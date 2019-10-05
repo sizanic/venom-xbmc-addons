@@ -33,13 +33,13 @@ class cGuiElement:
         self.__sTmdb = ''
         self.__sMediaUrl = ''
         self.__sSiteUrl = ''
-        #contient le titre qui seras coloré
+        #contient le titre qui sera coloré
         self.__sTitle = ''
         #contient le titre propre
         self.__sCleanTitle = ''
-        #vide
-        self.__sTitleSecond = ''
-        #contient le titre modifier pour BDD
+        #titre considéré Vu
+        self.__sTitleWatched = ''
+        #contient le titre modifié pour BDD
         self.__sFileName = ''
         self.__sDescription = ''
         self.__sGenre = ''
