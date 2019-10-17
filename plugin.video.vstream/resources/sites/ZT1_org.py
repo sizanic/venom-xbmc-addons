@@ -66,7 +66,7 @@ def showSearch():
         return
 
 
-# Récupération dynamique des genres
+# Récupération dynamique des catégories
 def showGenre():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
@@ -114,17 +114,16 @@ def showMovies():
     tags = set()
 
     if contents:
-#         progress_ = progress().VScreate(SITE_NAME)
-        total = len(contents)
         for content in contents:
-#             progress_.VSupdate(progress_, total)
-#             if progress_.iscanceled():
-#                 break
             idTag = content['tags']
             tags.add(idTag[0])
 
-#    
+        progress_ = progress().VScreate(SITE_NAME)
+        total = len(tags)
         for tag in tags:
+            progress_.VSupdate(progress_, total)
+            if progress_.iscanceled():
+                break
             sUrl = TAGS_URL + str(tag)
             oRequestHandler = cRequestHandler(sUrl)
             oRequestHandler.addHeaderEntry('User-Agent', UA)
@@ -142,7 +141,7 @@ def showMovies():
             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
              
             oGui.addMovie(SITE_IDENTIFIER, 'showMoviesLinks', sTitle, '', 'genres.png', '', oOutputParameterHandler)
-#         progress_.VSclose(progress_)
+        progress_.VSclose(progress_)
             
     oGui.setEndOfDirectory()
     
@@ -195,11 +194,11 @@ def __checkForNextPage(sHtmlContent):
 def showMoviesLinks():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
-    sTitle = oInputParameterHandler.getValue('sMovieTitle')
+    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sUrl = oInputParameterHandler.getValue('siteUrl')
 
     #Affichage du texte
-    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Qualités disponibles pour ce film:[/COLOR]')
+    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Qualités disponibles pour ce film :[/COLOR]')
 
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.addHeaderEntry('User-Agent', UA)
@@ -217,11 +216,12 @@ def showMoviesLinks():
                 break
  
             sTitle = content['title']['rendered'].encode('utf-8')
-            sTitle = sTitle.replace('&#8211; Qualité','(') + ')'
+            sTitle = sTitle.replace('&#8211; Qualité ','[').replace(' | ','](') + ')'
+#            sTitle = sTitle.replace('&#8211; Qualité','(') + ')'
             sUrl2 = POST_URL + str(content['id'])
     
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
+            oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
              
             oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', 'genres.png', '', oOutputParameterHandler)
@@ -266,22 +266,31 @@ def showHosters():
     sHtmlContent = oRequestHandler.request()
 
     oParser = cParser()
-    sPattern = 'target=\"_blank\">([^"]+)</a></div>'
+    #sPattern = 'bold;color:.+?\\">(.+?)<\/div><\/b><b><form action=[^"]"(.+?)[^"]"'
+    sPattern = 'bold;color:.+?\\">(.+?)<\/div><\/b><b><form action=[^"]"(.+?)[^"]".+?submit[^"]">(.+?)<'
+#     sPattern = 'target=\"_blank\">([^"]+)</a></div>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
-        sUrl2 = aResult[1][0]
+        for aEntry in aResult[1]:
 
+            # Exclure les fichiers en plusieurs parties
+            DL = aEntry[2]
+            if DL != 'T\\u00e9l\\u00e9charger':
+                continue
+
+            sHoster = aEntry[0]
+            sUrl2 = aEntry[1]
             # sHoster = aEntry[0]
 #             sHoster = re.sub('\.\w+', '', aEntry)
 #             sUrl2 = URL_MAIN[:-1] + aEntry[1]
-#             sTitle = ('%s [COLOR coral]%s[/COLOR]') % (sMovieTitle, sHoster)
+            sTitle = ('%s [COLOR coral]%s[/COLOR]') % (sMovieTitle, sHoster)
 
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', sUrl2)
-        oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
-        oOutputParameterHandler.addParameter('sThumb', sThumb)
-        oGui.addMovie(SITE_IDENTIFIER, 'Display_protected_link', sMovieTitle, '', sThumb, sDesc, oOutputParameterHandler)
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sUrl2)
+            oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
+            oOutputParameterHandler.addParameter('sThumb', sThumb)
+            oGui.addMovie(SITE_IDENTIFIER, 'Display_protected_link', sTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
