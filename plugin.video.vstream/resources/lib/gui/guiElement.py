@@ -33,13 +33,13 @@ class cGuiElement:
         self.__sTmdb = ''
         self.__sMediaUrl = ''
         self.__sSiteUrl = ''
-        #contient le titre qui seras coloré
+        #contient le titre qui sera coloré
         self.__sTitle = ''
         #contient le titre propre
         self.__sCleanTitle = ''
-        #vide
-        self.__sTitleSecond = ''
-        #contient le titre modifier pour BDD
+        #titre considéré Vu
+        self.__sTitleWatched = ''
+        #contient le titre modifié pour BDD
         self.__sFileName = ''
         self.__sDescription = ''
         self.__sGenre = ''
@@ -269,6 +269,12 @@ class cGuiElement:
             sTitle2 = sTitle2 + 'S' + self.__Season
         if self.__Episode:
             sTitle2 = sTitle2 + 'E' + self.__Episode
+            
+        #Titre unique pour pour marquer VU (avec numéro de l'épisode pour les séries)
+        self.__sTitleWatched = self.str_conv(sTitle).replace(' ', '')
+        if sTitle2:
+            self.__sTitleWatched += '_' + sTitle2
+            
         if sTitle2:
             sTitle2 = "[COLOR %s]%s[/COLOR] " % (self.__sDecoColor, sTitle2)
 
@@ -296,7 +302,10 @@ class cGuiElement:
 
     def setTitle(self, sTitle):
         self.__sCleanTitle = sTitle
-        self.__sTitle = self.TraiteTitre(sTitle)
+        if not sTitle.startswith('[COLOR') :
+            self.__sTitle = self.TraiteTitre(sTitle)
+        else:
+            self.__sTitle = sTitle
 
     def getTitle(self):
         return self.__sTitle
@@ -304,11 +313,11 @@ class cGuiElement:
     def getCleanTitle(self):
         return self.__sCleanTitle
 
-    def setTitleSecond(self, sTitleSecond):
-        self.__sTitleSecond = sTitleSecond
+#    def setTitleWatched(self, sTitleWatched):
+#        self.__sTitleWatched = sTitleWatched
 
-    def getTitleSecond(self):
-        return self.__sTitleSecond
+    def getTitleWatched(self):
+        return self.__sTitleWatched
 
     def setDescription(self, sDescription):
         self.__sDescription = sDescription
@@ -374,16 +383,15 @@ class cGuiElement:
     def getWatched(self):
 
         #Fonctionne pour marquer lus un dossier
-        if not self.getTitle():
-            return ''
+        if not self.getTitleWatched():
+            return 0
 
         meta = {}
-        meta['title'] = self.getFileName() # A partir du titre original
+        meta['title'] = self.getTitleWatched()
         meta['site'] = self.getSiteUrl()
 
         data = self.DB.get_watched(meta)
         return data
-
 
     def str_conv(self, data):
         if isinstance(data, str):
@@ -399,9 +407,9 @@ class cGuiElement:
         data = re.sub(r'\[.*\]|\(.*\)', r'', str(data))
         data = data.replace('VF', '').replace('VOSTFR', '').replace('FR', '')
         #data=re.sub(r'[0-9]+?', r'', str(data))
-        data = data.replace('-', ' ')   # on garde un espace pour que Orient-express ne devienne pas Orientexpress
+        data = data.replace('-', ' ')  #on garde un espace pour que Orient-express ne devienne pas Orientexpress pour la recherche tmdb
         data = data.replace('Saison', '').replace('saison', '').replace('Season', '').replace('Episode', '').replace('episode', '')
-        data = re.sub('[^%s]' % (string.ascii_lowercase+string.digits), ' ', data.lower())
+        data = re.sub('[^%s]' % (string.ascii_lowercase + string.digits), ' ', data.lower())
         #data = urllib.quote_plus(data)
 
         #data = data.decode('string-escape')

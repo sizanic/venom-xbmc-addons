@@ -86,14 +86,6 @@ class cGui():
         #oGuiElement.setTvFanart()
         oGuiElement.setCat(2)
 
-        # if oOutputParameterHandler.getValue('season'):
-            # sSeason = oOutputParameterHandler.getValue('season')
-            # oGuiElement.addItemValues('Season', sSeason)
-
-        # if oOutputParameterHandler.getValue('episode'):
-            # sSeason = oOutputParameterHandler.getValue('episode')
-            # oGuiElement.addItemValues('Episode', sSeason)
-
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
@@ -119,7 +111,7 @@ class cGui():
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
 
-        oOutputParameterHandler.addParameter('sFileName', sTitle)
+#        oOutputParameterHandler.addParameter('sFileName', sTitle)
         self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
         #self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
         self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
@@ -296,7 +288,7 @@ class cGui():
 
         sItemUrl = self.__createItemUrl(oGuiElement, oOutputParameterHandler)
 
-        oOutputParameterHandler.addParameter('sFileName', oGuiElement.getFileName())
+        oOutputParameterHandler.addParameter('sTitleWatched', oGuiElement.getTitleWatched())
 
         #new context prend en charge les metas
         if (oGuiElement.getMeta() > 0):
@@ -347,7 +339,7 @@ class cGui():
         aProperties = oGuiElement.getItemProperties()
         for sPropertyKey in aProperties.keys():
             oListItem.setProperty(sPropertyKey, aProperties[sPropertyKey])
-        oListItem.setProperty('fileName', oGuiElement.getFileName())
+#        oListItem.setProperty('fileName', oGuiElement.getFileName())
 
         return oListItem
 
@@ -369,9 +361,12 @@ class cGui():
 
         sItemUrl = self.__createItemUrl(oGuiElement, oOutputParameterHandler)
 
+        oOutputParameterHandler.addParameter('sTitleWatched', oGuiElement.getTitleWatched())
+        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
+
         oListItem = self.__createContextMenu(oGuiElement, oListItem)
 
-        sPluginHandle = cPluginHandler().getPluginHandle()
+#        sPluginHandle = cPluginHandler().getPluginHandle()
 
         #modif 13/09
         #xbmcplugin.addDirectoryItem(sPluginHandle, sItemUrl, oListItem, isFolder=False)
@@ -655,26 +650,26 @@ class cGui():
 
     def setWatched(self):
         if (True):
-            #Use database
+            #Use VStream database
             oInputParameterHandler = cInputParameterHandler()
-
-            aParams = oInputParameterHandler.getAllParameter()
-
             sSite = oInputParameterHandler.getValue('siteUrl')
-            sTitle = oInputParameterHandler.getValue('sFileName')
+            sTitle = oInputParameterHandler.getValue('sTitleWatched')
+            if not sTitle:
+                return
 
             meta = {}
             meta['title'] = sTitle
             meta['site'] = sSite
-
-            row = cDb().get_watched(meta)
+            
+            db = cDb()
+            row = db.get_watched(meta)
             if row:
-                cDb().del_watched(meta)
-                cDb().del_resume(meta)
+                db.del_watched(meta)
+                db.del_resume(meta)
             else:
-                cDb().insert_watched(meta)
-                
-            xbmc.executebuiltin( 'Action(ToggleWatched)' )
+                db.insert_watched(meta)
+
+            xbmc.executebuiltin( 'Container.Refresh' )
             
         else:
             # Use kodi buildin feature

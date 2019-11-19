@@ -21,9 +21,9 @@ except:
 #xbmc.log(str(year), xbmc.LOGNOTICE)
 
 TMDB_GENRES = {
-    28:'Action', 12:'Aventure', 16:'Animation', 35:'Comédie', 80:'Crime',99:'Documentaire', 18:'Drame',
-    10751:'Familial', 14:'Fantastique', 36:'Histoire', 27:'Horreur', 10402:'Musique', 9648:'Mystère',
-    10749:'Romance', 878:'Science-Fiction', 10770:'Téléfilm', 53:'Thriller', 10752:'Guerre', 37:'Western'}
+    28:'Action', 12:'Aventure', 16:'Animation', 35:'Comï¿½die', 80:'Crime',99:'Documentaire', 18:'Drame',
+    10751:'Familial', 14:'Fantastique', 36:'Histoire', 27:'Horreur', 10402:'Musique', 9648:'Mystï¿½re',
+    10749:'Romance', 878:'Science-Fiction', 10770:'Tï¿½lï¿½film', 53:'Thriller', 10752:'Guerre', 37:'Western'}
 
 
 class cTMDb:
@@ -53,6 +53,7 @@ class cTMDb:
                 self.db.row_factory = sqlite.Row
                 self.dbcur = self.db.cursor()
                 self.__createdb()
+                return
         except:
             VSlog('erreur: Impossible d ecrire sur %s' % self.REALCACHE )
             pass
@@ -159,8 +160,9 @@ class cTMDb:
         ''' Cleanup db when object destroyed '''
         try:
             self.dbcur.close()
-            self.dbcon.close()
-        except: pass
+            self.db.close()
+        except:
+            pass
 
 
     def getToken(self):
@@ -205,7 +207,7 @@ class cTMDb:
             term = quote_plus(name)
 
         meta = self._call('search/'+str(mediaType), 'query=' + term + '&page=' + str(page))
-        #teste sans l'année
+        #teste sans l'annï¿½e
         if 'errors' not in meta and 'status_code' not in meta:
             if 'total_results' in meta and meta['total_results'] == 0 and year:
                     #meta = self.get_movie_idbyname(name,'')
@@ -229,7 +231,7 @@ class cTMDb:
             term = quote_plus(name)
 
         meta = self._call('search/movie', 'query=' + term + '&page=' + str(page))
-        #teste sans l'année
+        #teste sans l'annï¿½e
         if 'errors' not in meta and 'status_code' not in meta:
             if 'total_results' in meta and meta['total_results'] == 0 and year:
                     meta = self.search_movie_name(name,'')
@@ -313,10 +315,10 @@ class cTMDb:
         _meta['episode'] = 0
         _meta['playcount'] = 0
 
-        if not 'title' in meta:
-            _meta['title'] = name
-        else:
+        if 'title' in meta and meta['title']:
             _meta['title'] = meta['title']
+        elif 'name' in meta and meta['name']:
+            _meta['title'] = meta['name']
 
         if 'id' in meta:
             _meta['tmdb_id'] = meta['id']
@@ -344,18 +346,16 @@ class cTMDb:
             _meta['premiered'] = meta['s_premiered']
 
         if _meta['year'] == '':
-            if 'release_date' in _meta and _meta['release_date']:
-                try:
+            try:
+                if 'release_date' in _meta and _meta['release_date']:
                     _meta['year'] = int(_meta['release_date'][:4])
-                except: pass
-            elif 'premiered' in _meta and _meta['premiered']:
-                try:
+                elif 'premiered' in _meta and _meta['premiered']:
                     _meta['year'] = int(_meta['premiered'][:4])
-                except: pass
-            elif 'first_air_date' in meta and meta['first_air_date']:
-                try:
+                elif 'first_air_date' in meta and meta['first_air_date']:
                     _meta['year'] = int(meta['first_air_date'][:4])
-                except: pass
+                elif 'air_date' in meta and meta['air_date']:
+                    _meta['year'] = int(meta['air_date'][:4])
+            except: pass
 
         if 'rating' in meta:
             _meta['rating'] = meta['rating']
@@ -521,7 +521,7 @@ class cTMDb:
             del meta['seasons']
 
         #ecrit movie et tvshow dans la BDD
-        # year n'est pas forcement l'année du film mais l'année utilisée pour la recherche
+        # year n'est pas forcement l'annï¿½e du film mais l'annï¿½e utilisï¿½e pour la recherche
         try:
             sql = "INSERT INTO %s (imdb_id, tmdb_id, title, year, credits, vote_average, vote_count, runtime, overview, mpaa, premiered, genre, studio, status, poster_path, trailer, backdrop_path, playcount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" % media_type
             self.dbcur.execute(sql, (meta['imdb_id'], meta['tmdb_id'], name, year, meta['credits'], meta['rating'], meta['votes'], meta['duration'], meta['plot'], meta['mpaa'], meta['premiered'], meta['genre'], meta['studio'], meta['status'], meta['poster_path'], meta['trailer'], meta['backdrop_path'], 0))
@@ -574,7 +574,7 @@ class cTMDb:
 
         VSlog('Attempting to retrieve meta data for %s: %s %s %s %s' % (media_type, name, year, imdb_id, tmdb_id))
 
-        #recherche dans la base de données
+        #recherche dans la base de donnï¿½es
         if not update:
             meta = self._cache_search(media_type, self._clean_title(name), tmdb_id, year, season, episode)
             if meta:
@@ -593,7 +593,7 @@ class cTMDb:
             elif name:
                 meta = self.search_tvshow_name(name, year)
 
-        #transforme les metas si trouvé
+        #transforme les metas si trouvï¿½
         if meta:
             meta = self._format(meta, name)
             #ecrit dans le cache
@@ -638,7 +638,7 @@ class cTMDb:
         data = json.loads(response.read())
         return data
 
-    # retourne la liste des genres en Texte, à partir des IDs
+    # retourne la liste des genres en Texte, ï¿½ partir des IDs
     def getGenresFromIDs(self, genresID):
         sGenres = []
         for gid in genresID:

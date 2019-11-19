@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
+encoding//plugin.video.vstream/resources/lib/gui/gui.py=utf-8
+encoding//plugin.video.vstream/resources/lib/gui/guiElement.py=utf-8
+encoding//plugin.video.vstream/resources/lib/tmdb.py=utf-8
 encoding//resources/hosters/allow_redirects.py=utf-8
 encoding//resources/hosters/hoster.py=utf-8
 encoding//resources/hosters/upvid.py=utf-8
