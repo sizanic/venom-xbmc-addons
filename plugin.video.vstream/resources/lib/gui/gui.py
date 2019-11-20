@@ -111,7 +111,7 @@ class cGui():
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
 
-        oOutputParameterHandler.addParameter('sFileName', sTitle)
+#        oOutputParameterHandler.addParameter('sFileName', sTitle)
         self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
         #self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
         self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
@@ -329,6 +329,10 @@ class cGui():
     def createListItem(self, oGuiElement):
 
         oListItem = listitem(oGuiElement.getTitle())
+#         oListItem.setInfo("watched:true")
+#         oGuiElement.addItemValues("playcount", "6")
+#         oGuiElement.addItemValues('watched', 'true')
+        oGuiElement.addItemValues('lastplayed', '2019-01-01 10:10:10')
         oListItem.setInfo(oGuiElement.getType(), oGuiElement.getItemValues())
         #oListItem.setThumbnailImage(oGuiElement.getThumbnail())
         #oListItem.setIconImage(oGuiElement.getIcon())
@@ -339,8 +343,10 @@ class cGui():
         aProperties = oGuiElement.getItemProperties()
         for sPropertyKey in aProperties.keys():
             oListItem.setProperty(sPropertyKey, aProperties[sPropertyKey])
-        oListItem.setProperty('fileName', oGuiElement.getFileName())
-
+#         oListItem.setProperty("playcount", "6")
+#         oListItem.setProperty("watched", "1")
+#        oListItem.setProperty('fileName', oGuiElement.getFileName())
+        
         return oListItem
 
     #affiche les liens playable
@@ -366,7 +372,7 @@ class cGui():
 
         oListItem = self.__createContextMenu(oGuiElement, oListItem)
 
-        sPluginHandle = cPluginHandler().getPluginHandle()
+#        sPluginHandle = cPluginHandler().getPluginHandle()
 
         #modif 13/09
         #xbmcplugin.addDirectoryItem(sPluginHandle, sItemUrl, oListItem, isFolder=False)
@@ -660,7 +666,7 @@ class cGui():
             meta = {}
             meta['title'] = sTitle
             meta['site'] = sSite
-
+            
             db = cDb()
             row = db.get_watched(meta)
             if row:
