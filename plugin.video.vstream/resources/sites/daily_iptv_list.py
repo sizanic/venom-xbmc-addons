@@ -11,7 +11,7 @@ from resources.lib.comaddon import progress#, VSlog
 
 SITE_IDENTIFIER = 'daily_iptv_list'
 SITE_NAME = 'Daily Iptv List'
-SITE_DESC = 'Regarder la tÃ©lÃ©vision'
+SITE_DESC = 'Regarder la télévision'
 
 URL_MAIN = 'https://www.dailyiptvlist.com/'
 URL_EUROPE = URL_MAIN + 'europe/'
@@ -119,7 +119,7 @@ def showDailyList():
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showDailyList', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showDailyList', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 

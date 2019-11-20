@@ -22,7 +22,7 @@ FUNCTION_SEARCH = 'sHowResultSearch'
 
 sPattern1 = '<a href="([^"]+)".+?src="([^"]+)" alt.*?="(.+?)".*?>'
 
-UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
+UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:66.0) Gecko/20100101 Firefox/66.0'
 
 def load():
     oGui = cGui()
@@ -34,7 +34,7 @@ def load():
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_MAIN)
     oOutputParameterHandler.addParameter('filtre', 'ajouts')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Ajouts rÃ©cents', 'enfants.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Ajouts récents', 'enfants.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_MAIN)
@@ -59,21 +59,21 @@ def showSearch():
 def sHowResultSearch(sSearch = ''):
     oGui = cGui()
 
-    oRequestHandler = cRequestHandler('https://disneyhd.tk/movies_list.php')
+    oRequestHandler = cRequestHandler(URL_MAIN + 'movies_list.php')
     sHtmlContent = oRequestHandler.request()
 
     oParser = cParser()
-    sPattern = '<img src="([^"]+)"><div class="title">([^>]+)<\/div><\/a><a class="item" href="([^"]+)"'
+    sPattern = '<a class="item" href="([^"]+)" title="([^"]+)"> *<img src="([^"]+)">'
     aResult = oParser.parse(sHtmlContent, sPattern)
-    
+
     if (aResult[0] == True):
-        
+
         total = len(aResult[1])
         progress_ = progress().VScreate(SITE_NAME)
         for aEntry in aResult[1]:
 
-            sUrl = URL_MAIN + aEntry[2]
-            sThumb = URL_MAIN + aEntry[0]
+            sUrl = URL_MAIN[:-1] + aEntry[0]
+            sThumb = URL_MAIN + aEntry[2]
             sTitle = aEntry[1]
 
             if sSearch.lower() not in sTitle.lower():
@@ -90,13 +90,13 @@ def sHowResultSearch(sSearch = ''):
     if not sSearch:
         oGui.setEndOfDirectory()
 
-def order(sList,sIndex):
-    #remet en ordre le rÃ©sultat du parser par un index ici par le titre qui est en position 2
+def order(sList, sIndex):
+    #remet en ordre le résultat du parser par un index ici par le titre qui est en position 2
     #exemple: ('http://venom', 'sThumb', 'sTitle')
-    #          aResult = order(aResult[1],2)
+    #          aResult = order(aResult[1], 2)
     aResult = sorted(sList, key=lambda a:a[sIndex])
     #retourne au format du parser
-    return True,aResult
+    return True, aResult
 
 def showMovies():
     oGui = cGui()
@@ -104,23 +104,20 @@ def showMovies():
 
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
-    
+
     if oInputParameterHandler.exist('filtre'):
         sFiltre = oInputParameterHandler.getValue('filtre')
     else:
         sFiltre = "none"
+
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    
-    #fh = open('c:\\test.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
 
     if 'ajouts' in sFiltre:
         sHtmlContent = oParser.abParse(sHtmlContent, '</i> Derniers ajouts', '</section>')
         aResult = oParser.parse(sHtmlContent, sPattern1)
     elif 'populaires' in sFiltre:
-        sHtmlContent = oParser.abParse(sHtmlContent, '</i> Les plus populaires', '</i> VisionnÃ©s en ce moment')
+        sHtmlContent = oParser.abParse(sHtmlContent, '</i> Les plus populaires', '</i> Visionnés en ce moment')
         aResult = oParser.parse(sHtmlContent, sPattern1)
     else:
         sHtmlContent = oParser.abParse(sHtmlContent, 'style', '</html>')
@@ -140,7 +137,7 @@ def showMovies():
             if progress_.iscanceled():
                 break
 
-            sUrl = URL_MAIN + aEntry[0]
+            sUrl = URL_MAIN[:-1] + aEntry[0]
             sThumb = URL_MAIN + aEntry[1]
             sTitle = aEntry[2].replace('streaming', '').replace(' 1080p', '').replace('_', ' ')
 
@@ -169,13 +166,13 @@ def showHosters():
     #film
     if '<ol id="playlist">' in sHtmlContent:
         sPattern = '<li data-trackurl="([^"]+)">(.+?)<\/li>'
-        
+
     elif 'data-ws=' in sHtmlContent:
         sPattern = 'data-ws="([^"]+)">(.+?)</span>'
     else:
-        sPattern = '<span class="qualiteversion" data-qualurl="([^"]+)">([^"]+)</span>'
+        sPattern = 'class="qualiteversion" data-qualurl="([^"]+)">([^"]+)</span>'
 
-        
+
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):

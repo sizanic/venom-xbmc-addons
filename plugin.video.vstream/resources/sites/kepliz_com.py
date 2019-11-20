@@ -17,13 +17,13 @@ SITE_DESC = 'Films en streaming'
 
 # Cette source est compatible avec les clones : wonior, toblek, bofiaz, nimvon, trozam, radego, sajbo
 URL_HOST = 'http://www.wonior.com/'
-#URL_MAIN =  l'URL est dynamique, elle est calculÃ©e Ã  la volÃ©e
+URL_MAIN = 'URL_MAIN'   # Constante tant l'url main n'a pas été déterminée
 
 #pour l'addon
-MOVIE_NEWS = ('', 'showMovies')
+MOVIE_NEWS = ('URL_MAIN', 'showMovies')
 MOVIE_MOVIE = ('index.php?option=com_content&view=category&id=29&Itemid=7', 'showMovies')
-MOVIE_GENRES = ('', 'showGenres')
-MOVIE_HD = ('', 'showMovies')
+MOVIE_GENRES = ('URL_MAIN', 'showGenres')
+MOVIE_HD = ('URL_MAIN', 'showMovies')
 
 ANIM_NEWS = ('index.php?option=com_content&view=category&id=2&Itemid=2', 'showMovies')
 ANIM_ANIMS = ('index.php?option=com_content&view=category&id=2&Itemid=19', 'showMovies')
@@ -54,43 +54,43 @@ def sLinkdyn():
 def load():
     
     # L'URL_MAIN change souvent, il faut la retrouver
-    URL_MAIN = sLinkdyn()
+    sMainUrl  = sLinkdyn()
 
     oGui = cGui()
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
 
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
-    oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + MOVIE_NEWS[0])
+    oOutputParameterHandler = cOutputParameterHandler(sMainUrl)
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
+    oOutputParameterHandler.addParameter('siteUrl', sMainUrl + MOVIE_NEWS[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
-    oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + MOVIE_MOVIE[0])
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
+    oOutputParameterHandler.addParameter('siteUrl', sMainUrl + MOVIE_MOVIE[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_MOVIE[1], 'Films', 'films.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
-    oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + MOVIE_GENRES[0])
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
+    oOutputParameterHandler.addParameter('siteUrl', sMainUrl + MOVIE_GENRES[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_GENRES[1], 'Films (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
-    oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + ANIM_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'AnimÃ©s (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
+    oOutputParameterHandler.addParameter('siteUrl', sMainUrl + ANIM_NEWS[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Animés (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
-    oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + DOC_NEWS[0])
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
+    oOutputParameterHandler.addParameter('siteUrl', sMainUrl + DOC_NEWS[0])
     oGui.addDir(SITE_IDENTIFIER, DOC_NEWS[1], 'Documentaires', 'doc.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
-    oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + DOC_SPECTALES[0])
+    oOutputParameterHandler.addParameter('sMainUrl', sMainUrl)
+    oOutputParameterHandler.addParameter('siteUrl', sMainUrl + DOC_SPECTALES[0])
     oGui.addDir(SITE_IDENTIFIER, DOC_SPECTALES[1], 'Spectacles', 'doc.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
@@ -108,26 +108,30 @@ def showGenres():
     oGui = cGui()
 
     oInputParameterHandler = cInputParameterHandler()
-    URL_MAIN = oInputParameterHandler.getValue('sMainUrl')
+
+    # L'URL_MAIN est passé en paramètre, sinon il faut la retrouver
+    sMainUrl = oInputParameterHandler.getValue('sMainUrl')
+    if not sMainUrl:
+        sMainUrl = sLinkdyn()
 
     liste = []
-    liste.append( ['A l\'affiche', URL_MAIN + 'index.php?option=com_content&view=category&id=29'] )
-    liste.append( ['Action', URL_MAIN + 'index.php?option=com_content&view=category&id=1'] )
-    liste.append( ['Animation', URL_MAIN + 'index.php?option=com_content&view=category&id=2'] )
-    liste.append( ['Aventure', URL_MAIN + 'index.php?option=com_content&view=category&id=4'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'index.php?option=com_content&view=category&id=6'] )
-    liste.append( ['Documentaires', URL_MAIN + 'index.php?option=com_content&view=category&id=26'] )
-    liste.append( ['Drame', URL_MAIN + 'index.php?option=com_content&view=category&id=7'] )
-    liste.append( ['Epouvante Horreur', URL_MAIN + 'index.php?option=com_content&view=category&id=9'] )
-    liste.append( ['Fantastique',URL_MAIN + 'index.php?option=com_content&view=category&id=8'] )
-    liste.append( ['Policier', URL_MAIN + 'index.php?option=com_content&view=category&id=10'] )
-    liste.append( ['Science Fiction', URL_MAIN + 'index.php?option=com_content&view=category&id=11'] )
-    liste.append( ['Spectacle', URL_MAIN + 'index.php?option=com_content&view=category&id=3'] )
-    liste.append( ['Thriller', URL_MAIN + 'index.php?option=com_content&view=category&id=12'] )
+    liste.append( ['A l\'affiche', sMainUrl + 'index.php?option=com_content&view=category&id=29'] )
+    liste.append( ['Action', sMainUrl + 'index.php?option=com_content&view=category&id=1'] )
+    liste.append( ['Animation', sMainUrl + 'index.php?option=com_content&view=category&id=2'] )
+    liste.append( ['Aventure', sMainUrl + 'index.php?option=com_content&view=category&id=4'] )
+    liste.append( ['Comédie', sMainUrl + 'index.php?option=com_content&view=category&id=6'] )
+    liste.append( ['Documentaires', sMainUrl + 'index.php?option=com_content&view=category&id=26'] )
+    liste.append( ['Drame', sMainUrl + 'index.php?option=com_content&view=category&id=7'] )
+    liste.append( ['Epouvante Horreur', sMainUrl + 'index.php?option=com_content&view=category&id=9'] )
+    liste.append( ['Fantastique', sMainUrl + 'index.php?option=com_content&view=category&id=8'] )
+    liste.append( ['Policier', sMainUrl + 'index.php?option=com_content&view=category&id=10'] )
+    liste.append( ['Science Fiction', sMainUrl + 'index.php?option=com_content&view=category&id=11'] )
+    liste.append( ['Spectacle', sMainUrl + 'index.php?option=com_content&view=category&id=3'] )
+    liste.append( ['Thriller', sMainUrl + 'index.php?option=com_content&view=category&id=12'] )
 
     for sTitle, sUrl in liste:
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('sMainUrl', URL_MAIN)
+        oOutputParameterHandler.addParameter('sMainUrl', sMainUrl )
         oOutputParameterHandler.addParameter('siteUrl', sUrl)
         oGui.addDir(SITE_IDENTIFIER, 'showMovies', sTitle, 'genres.png', oOutputParameterHandler)
 
@@ -137,9 +141,9 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     oParser = cParser()
     oInputParameterHandler = cInputParameterHandler()
-    sMainUrl = oInputParameterHandler.getValue('sMainUrl')
 
-    # L'URL_MAIN est passÃ© en paramÃ¨tre, sinon il faut la retrouver
+    # L'URL_MAIN est passé en paramètre, sinon il faut la retrouver
+    sMainUrl = oInputParameterHandler.getValue('sMainUrl')
     if not sMainUrl:
         sMainUrl = sLinkdyn()
 
@@ -151,7 +155,7 @@ def showMovies(sSearch = ''):
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
 
-    # En cas de recherche direct OU lors de la navigation dans les differentes pages de rÃ©sultats d'une recherche
+    # En cas de recherche direct OU lors de la navigation dans les differentes pages de résultats d'une recherche
     if('searchword=' in sUrl) :
         sPattern = '<h4><a href="\/[0-9a-zA-Z]+\/(.+?)"  >(.+?)<'
     else:
@@ -441,9 +445,9 @@ def showHostersLink3():
     # Si il existe, suivi du lien
     if ( aResult[0] == True ):
         # VSlog(aResult[1][0])
-        # sLink = sLink.rsplit('/', 1)[0] # supprime la derniÃ¨re partie de l'url de l'iframe
+        # sLink = sLink.rsplit('/', 1)[0] # supprime la dernière partie de l'url de l'iframe
         # VSlog(sLink)
-        # href = sLink + '/' + aResult[1][0] # concatÃ©nation du rÃ©sultat avec le href trouvÃ© via regex
+        # href = sLink + '/' + aResult[1][0] # concaténation du résultat avec le href trouvé via regex
         # VSlog(href)
 
         #VSlog(aResult[1][0])

@@ -4,10 +4,10 @@ import re
 class cParser:
 
     def parseSingleResult(self, sHtmlContent, sPattern):     
-	aMatches = re.compile(sPattern).findall(sHtmlContent)
-	if (len(aMatches) == 1):
+    aMatches = re.compile(sPattern).findall(sHtmlContent)
+    if (len(aMatches) == 1):
                 aMatches[0] = self.__replaceSpecialCharacters(aMatches[0])
-		return True, aMatches[0]
+        return True, aMatches[0]
         return False, aMatches
 
     def __replaceSpecialCharacters(self, sString):
@@ -15,7 +15,8 @@ class cParser:
 
     def parse(self, sHtmlContent, sPattern, iMinFoundValue = 1):
         sHtmlContent = self.__replaceSpecialCharacters(str(sHtmlContent))
-        aMatches = re.compile(sPattern, re.IGNORECASE).findall(sHtmlContent)
+        cmp = re.compile(sPattern, re.IGNORECASE)
+        aMatches = cmp.findall(sHtmlContent)
         if (len(aMatches) >= iMinFoundValue):                
             return True, aMatches
         return False, aMatches
@@ -44,7 +45,7 @@ class cParser:
 
     def abParse(self,sHtmlContent,start,end,startoffset=''):
         #usage oParser.abParse(sHtmlContent,"start","end")
-        #startoffset (int) dÃ©cale le dÃ©but pour ne pas prendre en compte start dans le rÃ©sultat final si besoin
+        #startoffset (int) décale le début pour ne pas prendre en compte start dans le résultat final si besoin
         #usage2 oParser.abParse(sHtmlContent,"start","end",6)
         #ex youtube.py
         if startoffset:

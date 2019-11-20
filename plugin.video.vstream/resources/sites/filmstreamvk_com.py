@@ -11,7 +11,7 @@ from resources.lib.comaddon import progress
 
 SITE_IDENTIFIER = 'filmstreamvk_com'
 SITE_NAME = 'Filmstreamvk'
-SITE_DESC = 'Films, SÃ©ries & Mangas en Streaming'
+SITE_DESC = 'Films, Séries & Mangas en Streaming'
 
 URL_MAIN = 'https://www.filmstreamvf.com/'
 
@@ -28,8 +28,8 @@ ANIM_ANIMS = (URL_MAIN + 'manga', 'showMovies')
 ANIM_NEWS = (URL_MAIN + 'manga', 'showMovies')
 
 URL_SEARCH = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_MOVIES = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_SERIES = (URL_MAIN + '?s=', 'showMovies')
+URL_SEARCH_MOVIES = (URL_SEARCH[0], 'showMovies')
+URL_SEARCH_SERIES = (URL_SEARCH[0], 'showMovies')
 
 FUNCTION_SEARCH = 'showMovies'
 
@@ -50,7 +50,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_COMMENTS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus commentÃ©s)', 'comments.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus commentés)', 'comments.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
@@ -58,11 +58,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'AnimÃ©s (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Animés (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -87,11 +87,11 @@ def showGenres():
     liste.append( ['Bande annonce', URL_MAIN + 'category/bande-annonce'] )
     liste.append( ['Biographie', URL_MAIN + 'category/biography'] )
     liste.append( ['Biopic', URL_MAIN + 'category/biopic'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'category/comedie'] )
-    liste.append( ['ComÃ©die dramatique', URL_MAIN + 'category/comedie-dramatique'] )
-    liste.append( ['ComÃ©die musicale', URL_MAIN + 'category/comedie-musicale'] )
+    liste.append( ['Comédie', URL_MAIN + 'category/comedie'] )
+    liste.append( ['Comédie dramatique', URL_MAIN + 'category/comedie-dramatique'] )
+    liste.append( ['Comédie musicale', URL_MAIN + 'category/comedie-musicale'] )
     liste.append( ['Concert', URL_MAIN + 'category/concert'] )
-    liste.append( ['Courts mÃ©trages', URL_MAIN + 'category/courts-metrages'] )
+    liste.append( ['Courts métrages', URL_MAIN + 'category/courts-metrages'] )
     liste.append( ['Crime', URL_MAIN + 'category/crime'] )
     liste.append( ['Divers', URL_MAIN + 'category/divers'] )
     liste.append( ['Documentaire', URL_MAIN + 'category/documentaire'] )
@@ -103,7 +103,7 @@ def showGenres():
     liste.append( ['Famille', URL_MAIN + 'category/famille'] )
     liste.append( ['Fantastique', URL_MAIN + 'category/fantastique'] )
     liste.append( ['Fantasy', URL_MAIN + 'category/fantasy'] )
-    liste.append( ['Film rÃ©compensÃ©', URL_MAIN + 'category/film-recompense'] )
+    liste.append( ['Film récompensé', URL_MAIN + 'category/film-recompense'] )
     liste.append( ['Guerre', URL_MAIN + 'category/guerre'] )
     liste.append( ['Histoire vraie', URL_MAIN + 'category/histoire-vraie'] )
     liste.append( ['Historique', URL_MAIN + 'category/historique'] )
@@ -111,12 +111,12 @@ def showGenres():
     liste.append( ['Judiciaire', URL_MAIN + 'category/judiciaire'] )
     liste.append( ['Musical', URL_MAIN + 'category/musical'] )
     liste.append( ['Mystery', URL_MAIN + 'category/mystery'] )
-    liste.append( ['Non classÃ©', URL_MAIN + 'category/non-classe'] )
-    liste.append( ['PÃ©plum', URL_MAIN + 'category/peplum'] )
+    liste.append( ['Non classé', URL_MAIN + 'category/non-classe'] )
+    liste.append( ['Péplum', URL_MAIN + 'category/peplum'] )
     liste.append( ['Policier', URL_MAIN + 'category/policier'] )
     liste.append( ['Romance', URL_MAIN + 'category/romance'] )
     liste.append( ['Science-Fiction', URL_MAIN + 'category/science-fiction'] )
-    liste.append( ['SÃ©rie', URL_MAIN + 'category/serie'] )
+    liste.append( ['Série', URL_MAIN + 'category/serie'] )
     liste.append( ['Spectacle', URL_MAIN + 'category/spectacle'] )
     liste.append( ['Sport', URL_MAIN + 'category/sport'] )
     liste.append( ['Sport event', URL_MAIN + 'category/sport-event'] )
@@ -189,7 +189,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -296,8 +296,8 @@ def showEpisode():
                 sLang = cUtil().unescape(sLang).encode("utf8")
                 oGui.addText(SITE_IDENTIFIER, '[COLOR crimson]' + sLang + '[/COLOR]')
             else:
-                #ce ne sont pas les mÃªmes tirets ne pas supprimer
-                sMovieTitle = sMovieTitle.replace(' â€“ Saison', ' Saison').replace(' - Saison', ' Saison')
+                #ce ne sont pas les mêmes tirets ne pas supprimer
+                sMovieTitle = sMovieTitle.replace(' – Saison', ' Saison').replace(' - Saison', ' Saison')
                 sTitle = sMovieTitle + ' episode ' + aEntry[2]
                 sUrl = aEntry[1]
 

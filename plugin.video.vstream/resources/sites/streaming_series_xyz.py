@@ -7,13 +7,13 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
-from resources.lib.comaddon import progress, dialog, xbmc#, VSlog
+from resources.lib.comaddon import progress, dialog, xbmc
 
 import requests
 
 SITE_IDENTIFIER = 'streaming_series_xyz'
 SITE_NAME = 'Streaming-Series.cx'
-SITE_DESC = 'SÃ©ries en Streaming'
+SITE_DESC = 'Séries en Streaming'
 
 URL_MAIN = 'https://dpstreaming.to/'
 
@@ -28,12 +28,14 @@ URL_SEARCH_SERIES = (URL_MAIN + '?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 def ProtectstreamBypass(url):
-
+    if url.startswith('/'):
+        url = URL_MAIN + url
+ 
     #lien commencant par VID_
     # Codedurl = url
-    Codedurl = url.replace('http:', 'https:')
+    #Codedurl = url.replace('http:', 'https:')
 
-    UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'
+    UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0'
 
     session = requests.Session()
     session.headers.update({
@@ -57,7 +59,7 @@ def ProtectstreamBypass(url):
 
     if (aResult[0] == True):
 
-        dialog().VSinfo('DÃ©codage en cours', "Patientez", 5)
+        dialog().VSinfo('Décodage en cours', "Patientez", 5)
         xbmc.sleep(5000)
 
         postdata = aResult[1][0]
@@ -71,7 +73,7 @@ def ProtectstreamBypass(url):
         data = {'k': postdata}
 
         try:
-            response = session.post('https://www.protect-stream.com/secur2.php', data=data)
+            response = session.post('https://dpstreaming.to/embed_secur.php', data=data)
         except requests.exceptions.RequestException as e:
             print "erreur" + str(e)
             return ''
@@ -79,8 +81,8 @@ def ProtectstreamBypass(url):
         data = response.text
         data = data.encode('utf-8', 'ignore')
 
-        #VSlog(type(data))
-        #VSlog(repr(data))
+        # VSlog(type(data))
+        # VSlog(repr(data))
 
         #fh = open('c:\\test.txt', "w")
         #fh.write(data)
@@ -89,7 +91,7 @@ def ProtectstreamBypass(url):
         #Test de fonctionnement
         aResult = oParser.parse(data, sPattern)
         if aResult[0]:
-            dialog().VSinfo('Lien encore protegÃ©', "Erreur", 5)
+            dialog().VSinfo('Lien encore protegé', "Erreur", 5)
             return ''
 
         #recherche du lien embed
@@ -115,11 +117,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -143,31 +145,31 @@ def showGenres():
     liste.append( ['Aventure', URL_MAIN + 'serie-category/series/aventure/'] )
     liste.append( ['Biopic', URL_MAIN + 'serie-category/series/biopic/'] )
     liste.append( ['Classique', URL_MAIN + 'serie-category/series/classique/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'serie-category/series/comedie/'] )
-    liste.append( ['ComÃ©die dramatique', URL_MAIN + 'serie-category/series/comedie-dramatique/'] )
-    liste.append( ['ComÃ©die musicale', URL_MAIN + 'serie-category/series/comedie-musicale/'] )
-    liste.append( ['Dessin animÃ©s', URL_MAIN + 'serie-category/series/dessin-anime/'] )
+    liste.append( ['Comédie', URL_MAIN + 'serie-category/series/comedie/'] )
+    liste.append( ['Comédie dramatique', URL_MAIN + 'serie-category/series/comedie-dramatique/'] )
+    liste.append( ['Comédie musicale', URL_MAIN + 'serie-category/series/comedie-musicale/'] )
+    liste.append( ['Dessin animés', URL_MAIN + 'serie-category/series/dessin-anime/'] )
     liste.append( ['Divers', URL_MAIN + 'serie-category/series/divers/'] )
     liste.append( ['Documentaires', URL_MAIN + 'serie-category/series/documentaire/'] )
     liste.append( ['Drama', URL_MAIN + 'serie-category/series/drama/'] )
     liste.append( ['Drame', URL_MAIN + 'serie-category/series/drame/'] )
     liste.append( ['Epouvante-Horreur', URL_MAIN + 'serie-category/series/epouvante-horreur/'] )
     liste.append( ['Espionnage', URL_MAIN + 'serie-category/series/espionnage/'] )
-    liste.append( ['ExpÃ©rimental', URL_MAIN + 'serie-category/series/experimental/'] )
+    liste.append( ['Expérimental', URL_MAIN + 'serie-category/series/experimental/'] )
     liste.append( ['Famille', URL_MAIN + 'serie-category/series/famille/'] )
     liste.append( ['Fantastique', URL_MAIN + 'serie-category/series/fantastique/'] )
     liste.append( ['Guerre', URL_MAIN + 'serie-category/series/guerre/'] )
     liste.append( ['Historique', URL_MAIN + 'serie-category/series/historique/'] )
     liste.append( ['Judiciaire', URL_MAIN + 'serie-category/series/judiciaire/'] )
-    liste.append( ['MÃ©dical', URL_MAIN + 'serie-category/series/medical/'] )
+    liste.append( ['Médical', URL_MAIN + 'serie-category/series/medical/'] )
     liste.append( ['Musical', URL_MAIN + 'serie-category/series/musical/'] )
-    liste.append( ['PÃ©plum', URL_MAIN + 'serie-category/series/peplum/'] )
+    liste.append( ['Péplum', URL_MAIN + 'serie-category/series/peplum/'] )
     liste.append( ['Policier', URL_MAIN + 'serie-category/series/policier/'] )
     liste.append( ['Romance', URL_MAIN + 'serie-category/series/romance/'] )
     liste.append( ['Science Fiction', URL_MAIN + 'serie-category/series/science-fiction/'] )
     liste.append( ['soap', URL_MAIN + 'serie-category/series/soap/'] )
     liste.append( ['Thriller', URL_MAIN + 'serie-category/series/thriller/'] )
-    liste.append( ['WebsÃ©rie', URL_MAIN + 'serie-category/series/webserie/'] )
+    liste.append( ['Websérie', URL_MAIN + 'serie-category/series/webserie/'] )
     liste.append( ['Western', URL_MAIN + 'serie-category/series/western/'] )
 
     for sTitle, sUrl in liste:
@@ -232,7 +234,7 @@ def showMovies(sSearch = ''):
         oGui.setEndOfDirectory()
 
 def __checkForNextPage(sHtmlContent):
-    sPattern = '<a class="nextpostslink" rel="next" href="(.+?)">Â»</a>'
+    sPattern = '<a class="nextpostslink" rel="next" href="(.+?)">»</a>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0] == True):
@@ -251,7 +253,7 @@ def showSeries():
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    #rÃ©cupÃ©ration du Synopsis
+    #récupération du Synopsis
     sDesc = ''
     try:
         sPattern = 'class="lab_syn">Synopsis :</span>(.+?)<\/p>'

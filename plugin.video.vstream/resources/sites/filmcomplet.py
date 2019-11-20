@@ -18,7 +18,6 @@ URL_MAIN = 'https://www.mesfilms.stream/'
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0'
 
 URL_SEARCH = (URL_MAIN + '?s=', 'showSearchResult')
-
 URL_SEARCH_MOVIES = (URL_SEARCH[0], 'showSearchResult')
 FUNCTION_SEARCH = 'showSearchResult'
 
@@ -48,7 +47,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NOTES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films (Les mieux notÃ©s)', 'notes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films (Les mieux notés)', 'notes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
@@ -56,7 +55,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANNEES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par années)', 'annees.png', oOutputParameterHandler)
 
     #ne fonctionne plus sur le site
     #oOutputParameterHandler = cOutputParameterHandler()
@@ -84,7 +83,7 @@ def showGenres():
     liste.append( ['Action & aventure', URL_MAIN + 'genre/action-adventure/'] )
     liste.append( ['Animation', URL_MAIN + 'genre/animation/'] )
     liste.append( ['Aventure', URL_MAIN + 'genre/aventure/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'genre/comedie/'] )
+    liste.append( ['Comédie', URL_MAIN + 'genre/comedie/'] )
     liste.append( ['Crime', URL_MAIN + 'genre/crime/'] )
     liste.append( ['Documentaire', URL_MAIN + 'genre/documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'genre/drame/'] )
@@ -95,7 +94,7 @@ def showGenres():
     liste.append( ['Histoire', URL_MAIN + 'genre/histoire/'] )
     liste.append( ['Horreur', URL_MAIN + 'genre/horreur/'] )
     liste.append( ['Musique', URL_MAIN + 'genre/musique/'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'genre/mystere/'] )
+    liste.append( ['Mystère', URL_MAIN + 'genre/mystere/'] )
     liste.append( ['News', URL_MAIN + 'genre/news/'] )
     liste.append( ['Policier', URL_MAIN + 'genre/policier/'] )
     liste.append( ['Reality', URL_MAIN + 'genre/reality/'] )
@@ -104,7 +103,7 @@ def showGenres():
     liste.append( ['Science Fiction & Fantastique', URL_MAIN + 'genre/science-fiction-fantastique/'] )
     liste.append( ['Soap', URL_MAIN + 'genre/soap/'] )
     liste.append( ['Talk', URL_MAIN + 'genre/talk/'] )
-    liste.append( ['TÃ©lÃ©film', URL_MAIN + 'genre/telefilm/'] )
+    liste.append( ['Téléfilm', URL_MAIN + 'genre/telefilm/'] )
     liste.append( ['Thriller', URL_MAIN + 'genre/thriller/'] )
     liste.append( ['War & Politics', URL_MAIN + 'genre/war-politics/'] )
     liste.append( ['Western', URL_MAIN + 'genre/western/'] )
@@ -261,7 +260,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()

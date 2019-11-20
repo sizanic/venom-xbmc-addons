@@ -10,11 +10,11 @@ from resources.lib.comaddon import progress
 
 SITE_IDENTIFIER = 'k_streaming'
 SITE_NAME = 'K-Streaming'
-SITE_DESC = 'Regarder Films en Streaming et SÃ©ries franÃ§ais gratuit'
+SITE_DESC = 'Regarder Films en Streaming et Séries français gratuit'
 
 URL_MAIN = 'https://www.k-streaming.ch/'
 
-#definis les url pour les catÃ©gories principale, ceci est automatique, si la definition est prÃ©sente elle sera affichee.
+#definis les url pour les catégories principale, ceci est automatique, si la definition est présente elle sera affichee.
 #LA RECHERCHE GLOBAL N'UTILE PAS showSearch MAIS DIRECTEMENT LA FONCTION INSCRITE DANS LA VARIABLE URL_SEARCH_*
 FUNCTION_SEARCH = 'showMovies'
 URL_SEARCH = (URL_MAIN + '?s=', 'showMovies')
@@ -49,7 +49,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'SÃ©ries (Menu)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'Séries (Menu)', 'series.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -70,11 +70,11 @@ def showMenuMovies():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_COMMENTS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus commentÃ©s)', 'comments.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus commentés)', 'comments.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NOTES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films (Les mieux notÃ©s)', 'notes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films (Les mieux notés)', 'notes.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -83,19 +83,19 @@ def showMenuSeries():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'SÃ©ries (Les plus vues)', 'views.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'Séries (Les plus vues)', 'views.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_COMMENTS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_COMMENTS[1], 'SÃ©ries (Les plus commentÃ©es) ', 'comments.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_COMMENTS[1], 'Séries (Les plus commentées) ', 'comments.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NOTES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NOTES[1], 'SÃ©ries (Les mieux notÃ©es)', 'notes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NOTES[1], 'Séries (Les mieux notées)', 'notes.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -117,7 +117,7 @@ def showGenres():
     liste.append( ['Animation', URL_MAIN + 'film/animation-gratuit/'] )
     liste.append( ['Arts Martiaux', URL_MAIN + 'film/arts-martiaux-streaming-vf/'] )
     liste.append( ['Aventure', URL_MAIN + 'film/aventure-streaming-vf/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'film/films-comedie-streaming/'] )
+    liste.append( ['Comédie', URL_MAIN + 'film/films-comedie-streaming/'] )
     liste.append( ['Documentaire', URL_MAIN + 'film/documentaire-streaming/'] )
     liste.append( ['Drame', URL_MAIN + 'film/film-drame-streaming-vf/'] )
     liste.append( ['Epouvante Horreur', URL_MAIN + 'film/horreur-streaming-film/'] )
@@ -172,7 +172,7 @@ def showMovies(sSearch = ''):
             sUrl2 = aEntry[0]
             sThumb = aEntry[1]
             #delete du tiret pour les series
-            sTitle = aEntry[2].replace(' - Saison', ' Saison')
+            sTitle = aEntry[2]#.replace(' - Saison', ' Saison')
             sDesc = ''
 
             oOutputParameterHandler = cOutputParameterHandler()
@@ -191,7 +191,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()

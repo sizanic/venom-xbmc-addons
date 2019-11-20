@@ -20,9 +20,9 @@ RandomKey = ''.join(random.choice(s) for i in range(32))
 
 SITE_IDENTIFIER = 'ianime'
 SITE_NAME = 'I anime'
-SITE_DESC = 'AnimÃ©s en streaming'
+SITE_DESC = 'Animés en streaming'
 
-URL_MAIN = 'https://www.ianimes.top/'
+URL_MAIN = 'https://www.ianimes.org/'
 
 MOVIE_MOVIE = (URL_MAIN + 'films.php?liste=' + RandomKey, 'ShowAlpha')
 MOVIE_GENRES = (URL_MAIN + 'films.php?liste=' + RandomKey, 'showGenres')
@@ -149,27 +149,27 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'SÃ©ries (Liste)', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Séries (Liste)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'AnimÃ©s (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Animés (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'AnimÃ©s (Liste)', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animés (Liste)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_VFS[1], 'AnimÃ©s (VF)', 'vf.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_VFS[1], 'Animés (VF)', 'vf.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_VOSTFRS[1], 'AnimÃ©s (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_VOSTFRS[1], 'Animés (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_GENRES[1], 'AnimÃ©s (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_GENRES[1], 'Animés (Genres)', 'genres.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -338,7 +338,7 @@ def showMovies(sSearch = ''):
         sPattern = '<center><div style="background: url\(\'([^\'].+?)\'\); background-size.+?<a href="([^"]+)".+?alt="(.+?)".+?itle'
         
         
-    sHtmlContent = re.sub('<a\s*href=\"categorie.php\?watch=\"\s*class="genre\s*\"','',sHtmlContent,re.DOTALL)
+    sHtmlContent = re.sub('<a\s*href=\"categorie.php\?watch=\"\s*class="genre\s*\"', '', sHtmlContent, re.DOTALL)
 
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -387,7 +387,7 @@ def showMovies(sSearch = ''):
             elif 'VOSTFR' in sTitle:
                 sLang = 'VOSTFR'
 
-            #affichage de la qualitÃ©
+            #affichage de la qualité
             sQual = ''
             if 'DVDRIP' in sTitle:
                 sQual = 'DVDRIP'
@@ -417,7 +417,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -533,7 +533,7 @@ def ExtractLink(html):
     if (not final.startswith('http')) and (len(final) > 2):
         final = URL_MAIN + final
 
-    return final.replace(' ','').replace('\n','')
+    return final.replace(' ', '').replace('\n', '')
 
 def showHosters():
     oGui = cGui()
@@ -564,7 +564,7 @@ def showHosters():
 
     if (aResult[0] == True):
         for aEntry in aResult[1]:
-            if re.match(".+?&#[0-9]+;", aEntry):#directe mais codÃ© html
+            if re.match(".+?&#[0-9]+;", aEntry):#directe mais codé html
                 sHosterUrl = cUtil().unescape(aEntry)
 
             else:#directe en clair

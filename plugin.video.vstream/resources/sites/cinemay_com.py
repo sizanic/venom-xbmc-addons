@@ -16,9 +16,9 @@ headers = {'User-Agent': UA}
 
 SITE_IDENTIFIER = 'cinemay_com'
 SITE_NAME = 'Cinemay'
-SITE_DESC = 'Films & SÃ©ries en streaming'
+SITE_DESC = 'Films & Séries en streaming'
 
-URL_MAIN = 'https://www.cinemay.vip/'
+URL_MAIN = 'https://www.cinemay.bz/'
 
 MOVIE_NEWS = (URL_MAIN + 'film-vf-streaming/', 'showMovies')
 MOVIE_MOVIE = (URL_MAIN + 'film-vf-streaming/', 'showMovies')
@@ -46,15 +46,15 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_GENRES[1], 'Films & SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_GENRES[1], 'Films & Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
-    # oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'SÃ©ries (Liste)', 'az.png', oOutputParameterHandler)
+    # oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'Séries (Liste)', 'az.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -74,7 +74,7 @@ def showGenres():
     liste.append( ['Action', URL_MAIN + 'genre/action/'] )
     liste.append( ['Animation', URL_MAIN + 'genre/animation/'] )
     liste.append( ['Aventure', URL_MAIN + 'genre/aventure/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'genre/comedie/'] )
+    liste.append( ['Comédie', URL_MAIN + 'genre/comedie/'] )
     liste.append( ['Crime', URL_MAIN + 'genre/crime/'] )
     liste.append( ['Documentaire', URL_MAIN + 'genre/documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'genre/drame/'] )
@@ -86,8 +86,8 @@ def showGenres():
     liste.append( ['Horreur', URL_MAIN + 'genre/horreur/'] )
     liste.append( ['Enfants', URL_MAIN + 'genre/kids/'] )
     liste.append( ['Musique', URL_MAIN + 'genre/musique/'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'genre/mystÃ¨re/'] )
-    liste.append( ['TÃ©lÃ©film', URL_MAIN + 'genre/telefilm/'] )
+    liste.append( ['Mystère', URL_MAIN + 'genre/mystère/'] )
+    liste.append( ['Téléfilm', URL_MAIN + 'genre/telefilm/'] )
     liste.append( ['Romance', URL_MAIN + 'genre/romance/'] )
     liste.append( ['Science-Fiction', URL_MAIN + 'genre/science_fiction/'] )
     liste.append( ['Soap', URL_MAIN + 'genre/soap/'] )
@@ -132,6 +132,10 @@ def showMovies(sSearch=''):
             sTitle = unicode(aEntry[1], 'utf-8')
             sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore').decode("unicode_escape")
             sTitle = sTitle.encode("latin-1")
+            #Nettoyage du titre
+            sTitle = sTitle.replace(' en streaming', '')
+            if sTitle.startswith('Film'):
+                sTitle = sTitle.replace('Film ', '')
 
             sThumb = URL_MAIN[:-1] + aEntry[2]
             sUrl = URL_MAIN[:-1] + aEntry[0]
@@ -157,7 +161,7 @@ def showMovies(sSearch=''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -389,7 +393,7 @@ def showSeriesHosters():
     sHtmlContent = oRequestHandler.request()
 
     oParser = cParser()
-    #Decoupage pour cibler l'Ã©pisode
+    #Decoupage pour cibler l'épisode
     sPattern = sData + '">(.+?)</ul>'
     sHtmlContent = oParser.parse(sHtmlContent, sPattern)
 

@@ -13,7 +13,7 @@ import urllib2, urllib, re
 
 SITE_IDENTIFIER = 'voirfilms_org'
 SITE_NAME = 'VoirFilms'
-SITE_DESC = 'Films, SÃ©ries & AnimÃ©s en Streaming'
+SITE_DESC = 'Films, Séries & Animés en Streaming'
 
 URL_MAIN = 'https://www.voir-films.info/'
 
@@ -49,7 +49,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_MOVIE[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_MOVIE[1], 'Films (Par ordre alphabÃ©tique)', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_MOVIE[1], 'Films (Par ordre alphabétique)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
@@ -57,31 +57,31 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANNEES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par années)', 'annees.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'SÃ©ries (Par ordre alphabÃ©tique)', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Séries (Par ordre alphabétique)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_ANNEES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_ANNEES[1], 'SÃ©ries (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_ANNEES[1], 'Séries (Par années)', 'annees.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'AnimÃ©s (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Animés (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'AnimÃ©s (Par ordre alphabÃ©tique)', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animés (Par ordre alphabétique)', 'az.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -129,8 +129,8 @@ def showGenres():
     liste.append( ['Arts Martiaux', sUrl + 'arts-martiaux_1'] )
     liste.append( ['Aventure', sUrl + 'aventure_1'] )
     liste.append( ['Biopic', sUrl + 'biopic_1'] )
-    liste.append( ['ComÃ©die', sUrl + 'film-comedie'] )
-    liste.append( ['ComÃ©die Dramatique', sUrl + 'comedie-dramatique_1'] )
+    liste.append( ['Comédie', sUrl + 'film-comedie'] )
+    liste.append( ['Comédie Dramatique', sUrl + 'comedie-dramatique_1'] )
     liste.append( ['Documentaire', sUrl + 'documentaire_1'] )
     liste.append( ['Drame', sUrl + 'drame_1'] )
     liste.append( ['Epouvante Horreur', sUrl + 'epouvante-horreur_1'] )
@@ -143,10 +143,10 @@ def showGenres():
     liste.append( ['Policier', sUrl + 'policier_1'] )
     liste.append( ['Romance', sUrl + 'romance_1'] )
     liste.append( ['Science Fiction', sUrl + 'science-fiction_1'] )
-    liste.append( ['SÃ©rie', sUrl + 'series_1'] )
+    liste.append( ['Série', sUrl + 'series_1'] )
     liste.append( ['Thriller', sUrl + 'thriller_1'] )
     liste.append( ['Western', sUrl + 'western_1'] )
-    liste.append( ['Non classÃ©', sUrl + 'non-classe_1'] )
+    liste.append( ['Non classé', sUrl + 'non-classe_1'] )
 
     for sTitle, sUrl in liste:
 
@@ -239,13 +239,13 @@ def showMovies(sSearch = ''):
     oParser = cParser()
 
     if sSearch:
-        #on redecode la recherche codÃ© il y a meme pas une seconde par l'addon
+        #on redecode la recherche codé il y a meme pas une seconde par l'addon
         sSearch = sSearch.replace(' ', '+')
         sSearch = urllib2.unquote(sSearch)
 
         #pdata = 'action=recherche&story=' + sSearch
 
-        oRequest = cRequestHandler(URL_MAIN + 'recherche?story=' + sSearch)
+        oRequest = cRequestHandler(URL_MAIN + 'recherche?s=' + sSearch)
         #oRequest.setRequestType(1)
         oRequest.addHeaderEntry('User-Agent', UA)
         oRequest.addHeaderEntry('Referer', URL_MAIN)

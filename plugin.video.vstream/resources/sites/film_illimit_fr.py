@@ -14,8 +14,8 @@ import re, urllib, urllib2
 UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0'
 
 SITE_IDENTIFIER = 'film_illimit_fr'
-SITE_NAME = 'Film illimitÃ©'
-SITE_DESC = 'Films, SÃ©ries HD en streaming'
+SITE_NAME = 'Film illimité'
+SITE_DESC = 'Films, Séries HD en streaming'
 
 URL_MAIN = 'https://official-film-illimite.to/'
 
@@ -30,8 +30,8 @@ SERIE_SERIES = (URL_MAIN + 'serie-tv/', 'showMovies')
 SERIE_HD = (URL_MAIN + 'serie-tv/', 'showMovies')
 
 URL_SEARCH = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_MOVIES = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_SERIES = (URL_MAIN + '?s=', 'showMovies')
+URL_SEARCH_MOVIES = (URL_SEARCH[0], 'showMovies')
+URL_SEARCH_SERIES = (URL_SEARCH[0], 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 def load():
@@ -55,11 +55,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANNEES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par années)', 'annees.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'SÃ©ries', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Séries', 'series.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -83,7 +83,7 @@ def showGenres():
     liste.append( ['Animation', URL_MAIN + 'films/animation/'] )
     liste.append( ['Arts Martiaux', URL_MAIN + 'films/arts-martiaux/'] )
     liste.append( ['Biographie', URL_MAIN + 'films/biographique/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'films/comedie/'] )
+    liste.append( ['Comédie', URL_MAIN + 'films/comedie/'] )
     liste.append( ['Crime/Gangster', URL_MAIN + 'films/crimegangster/'] )
     liste.append( ['Documentaire', URL_MAIN + 'films/documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'films/drame/'] )
@@ -94,7 +94,7 @@ def showGenres():
     liste.append( ['Guerre', URL_MAIN + 'films/guerre/'] )
     liste.append( ['Histoire', URL_MAIN + 'films/histoire/'] )
     liste.append( ['Musique/Danse', URL_MAIN + 'films/musiquedanse/'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'films/mystere/'] )
+    liste.append( ['Mystère', URL_MAIN + 'films/mystere/'] )
     liste.append( ['Policier', URL_MAIN + 'films/policier/'] )
     liste.append( ['Romance', URL_MAIN + 'films/romance/'] )
     liste.append( ['Science-fiction', URL_MAIN + 'films/science-fiction/'] )
@@ -102,7 +102,7 @@ def showGenres():
     liste.append( ['Spectacle (VOSTFR)', URL_MAIN + 'spectacle/vostfr-spectacle/'] )
     liste.append( ['Sport', URL_MAIN + 'films/sport/'] )
     liste.append( ['Suspense/Thriller', URL_MAIN + 'films/thrillersuspense/'] )
-    liste.append( ['TÃ©lÃ©film', URL_MAIN + 'films/telefilm/'] )
+    liste.append( ['Téléfilm', URL_MAIN + 'films/telefilm/'] )
     liste.append( ['VOSTFR', URL_MAIN + 'films/vostfr/'] )
     liste.append( ['Western', URL_MAIN + 'films/western/'] )
 
@@ -148,7 +148,7 @@ def showMovies(sSearch = ''):
     sHtmlContent = SucurieBypass().GetHtml(sUrl)
 
     oParser = cParser()
-    sPattern = 'class="item"> *<a href="([^<]+)">.+?<img[^<>]+src="([^<>"]+?)" alt="([^"]+?)".+?<span class="calidad2">(.+?)<\/span>'
+    sPattern = 'class="item"> *<a href="([^<]+)">.+?<img[^<>]+src="([^<>"]+?)" alt="([^"]+?)".+?<span class="calidad2">([^<]+)<\/span>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == False):
@@ -232,7 +232,7 @@ def showHosters():
     sHtmlContent = sHtmlContent.replace('src="//www.youtube.com/', '')
 
 
-    sPattern = '<iframe.+?src="(.+?)"'
+    sPattern = '<iframe.+?src="([^"]+)"'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == False):

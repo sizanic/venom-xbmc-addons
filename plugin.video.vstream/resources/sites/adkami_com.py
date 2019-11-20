@@ -9,14 +9,9 @@ from resources.lib.parser import cParser
 from resources.lib.comaddon import progress, VSlog
 import re
 
-#Ce site a des probleme en http/1.1 >> incomplete read error
-import httplib
-httplib.HTTPConnection._http_vsn = 10
-httplib.HTTPConnection._http_vsn_str = 'HTTP/1.0'
-
 SITE_IDENTIFIER = 'adkami_com'
 SITE_NAME = 'ADKami'
-SITE_DESC = 'Bienvenue sur ADKami un site AnimÃ©s Manga & SÃ©rie en streaming.'
+SITE_DESC = 'Bienvenue sur ADKami un site Animés Manga & Série en streaming.'
 
 URL_MAIN = 'https://www.adkami.com/'
 
@@ -44,19 +39,19 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_LIST[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_LIST[1], 'AnimÃ©s (Liste)', 'animes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_LIST[1], 'Animés (Liste)', 'animes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_VIEWS[1], 'AnimÃ©s (Les plus vus)', 'views.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_VIEWS[1], 'Animés (Les plus vus)', 'views.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'SÃ©ries (Liste)', 'az.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'Séries (Liste)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'SÃ©ries (Les plus vues)', 'views.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'Séries (Les plus vues)', 'views.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -78,17 +73,17 @@ def showGenre():
     liste = []
     liste.append( ['Action', URL_MAIN + 'video?recherche=&genre3=1&type2=' + sType2] )
     liste.append( ['Aventure', URL_MAIN + 'video?recherche=&genre3=2&type2=' + sType2] )
-    liste.append( ['Amour & AmitiÃ©', URL_MAIN + 'video?recherche=&genre3=3&type2=' + sType2] )
+    liste.append( ['Amour & Amitié', URL_MAIN + 'video?recherche=&genre3=3&type2=' + sType2] )
     liste.append( ['Combat', URL_MAIN + 'video?recherche=&genre3=4&type2=' + sType2] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'video?recherche=&genre3=5&type2=' + sType2] )
-    liste.append( ['Contes & RÃ©cits', URL_MAIN + 'video?recherche=&genre3=6&type2=' + sType2] )
+    liste.append( ['Comédie', URL_MAIN + 'video?recherche=&genre3=5&type2=' + sType2] )
+    liste.append( ['Contes & Récits', URL_MAIN + 'video?recherche=&genre3=6&type2=' + sType2] )
     liste.append( ['Cyber & Mecha', URL_MAIN + 'video?recherche=&genre3=7&type2=' + sType2] )
     liste.append( ['Dark Fantasy', URL_MAIN + 'video?recherche=&genre3=8&type2=' + sType2] )
     liste.append( ['Drame', URL_MAIN + 'video?recherche=&genre3=9&type2=' + sType2] )
     liste.append( ['Ecchi', URL_MAIN + 'video?recherche=&genre3=10&type2=' + sType2] )
-    liste.append( ['Ã‰ducatif', URL_MAIN + 'video?recherche=&genre3=11&type2=' + sType2] )
-    liste.append( ['Ã‰nigme & Policier', URL_MAIN + 'video?recherche=&genre3=12&type2=' + sType2] )
-    liste.append( ['Ã‰pique & HÃ©roique', URL_MAIN + 'video?recherche=&genre3=13&type2=' + sType2] )
+    liste.append( ['Éducatif', URL_MAIN + 'video?recherche=&genre3=11&type2=' + sType2] )
+    liste.append( ['Énigme & Policier', URL_MAIN + 'video?recherche=&genre3=12&type2=' + sType2] )
+    liste.append( ['Épique & Héroique', URL_MAIN + 'video?recherche=&genre3=13&type2=' + sType2] )
     liste.append( ['Espace & Sci-Fiction', URL_MAIN + 'video?recherche=&genre3=14&type2=' + sType2] )
     liste.append( ['Familial & Jeunesse', URL_MAIN + 'video?recherche=&genre3=15&type2=' + sType2] )
     liste.append( ['Fantastique & Mythe', URL_MAIN + 'video?recherche=&genre3=16&type2=' + sType2] )
@@ -100,8 +95,8 @@ def showGenre():
     liste.append( ['Psychologique', URL_MAIN + 'video?recherche=&genre3=22&type2=' + sType2] )
     liste.append( ['Sport', URL_MAIN + 'video?recherche=&genre3=23&type2=' + sType2] )
     liste.append( ['Tranche de vie', URL_MAIN + 'video?recherche=&genre3=24&type2=' + sType2] )
-    liste.append( ['ShÃ´jo-Ai', URL_MAIN + 'video?recherche=&genre3=25&type2=' + sType2] )
-    liste.append( ['ShÃ´nen-Ai', URL_MAIN + 'video?recherche=&genre3=26&type2=' + sType2] )
+    liste.append( ['Shôjo-Ai', URL_MAIN + 'video?recherche=&genre3=25&type2=' + sType2] )
+    liste.append( ['Shônen-Ai', URL_MAIN + 'video?recherche=&genre3=26&type2=' + sType2] )
     liste.append( ['Yaoi/BL', URL_MAIN + 'video?recherche=&genre3=27&type2=' + sType2] )
 
     for sTitle, sUrl in liste:
@@ -145,7 +140,7 @@ def showList():
     sPattern = 'class="video-item-list-days"><h5>Lettre ' + sLetter + '</h5></div>(.+?)<(div id=|div class="col-12 col-l-3")'
     sHtmlContent = oParser.parse(sHtmlContent, sPattern)
 
-    #regex pour listage films sur la partie decoupÃ©e
+    #regex pour listage films sur la partie decoupée
     sPattern = '<span class="top"><a href="([^"]+)"><span class="title">([^<>]+)<\/span>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -276,12 +271,12 @@ def showEpisode():
         pass
 
     oParser = cParser()
-    sPattern = 'line-height:200px;font-size:26px;text-align:center;">L.anime est licenciÃ©<.p>'
+    sPattern = 'line-height:200px;font-size:26px;text-align:center;">L.anime est licencié<.p>'
 
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
-        oGui.addText(SITE_IDENTIFIER, '[COLOR red]AnimÃ© licenciÃ©[/COLOR]')
+        oGui.addText(SITE_IDENTIFIER, '[COLOR red]Animé licencié[/COLOR]')
 
     else:
         sPattern = '<li class="saison">([^<>]+)</li>|<a href="(https:\/\/www\.adkami\.com[^"]+)"[^<>]+>([^<>]+)<\/a><\/li>'
@@ -334,7 +329,7 @@ def showLinks():
             for aEntry in aResult1[1]:
                 if aEntry:
                     sLicence = aEntry
-                    oGui.addText(SITE_IDENTIFIER, "[COLOR red]AnimÃ©s dispo gratuitement et legalement sur %s [/COLOR]" % str(sLicence))
+                    oGui.addText(SITE_IDENTIFIER, "[COLOR red]Animés dispo gratuitement et legalement sur %s [/COLOR]" % str(sLicence))
     else:
         aResult = re.findall(sPattern, sHtmlContent, re.DOTALL)
         if (aResult):

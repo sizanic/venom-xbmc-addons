@@ -18,14 +18,14 @@ UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/
 headers = {'User-Agent': UA}
 
 SITE_IDENTIFIER = 'extreme_down'
-SITE_NAME = 'Extreme Down (bÃªta)'
-SITE_DESC = 'films en streaming, streaming hd, streaming 720p, Films/sÃ©ries, rÃ©cent'
+SITE_NAME = 'Extreme Down (bêta)'
+SITE_DESC = 'films en streaming, streaming hd, streaming 720p, Films/séries, récent'
 
 URL_MAIN = 'https://www.extreme-down.xyz/'
 
 URL_SEARCH = (URL_MAIN + 'home.html', 'showMovies')
-URL_SEARCH_MOVIES = (URL_MAIN + 'home.html', 'showMovies')
-URL_SEARCH_SERIES = (URL_MAIN + 'home.html', 'showMovies')
+URL_SEARCH_MOVIES = (URL_SEARCH[0], 'showMovies')
+URL_SEARCH_SERIES = (URL_SEARCH[0], 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 MOVIE_NEWS = (URL_MAIN, 'showMovies')
@@ -81,7 +81,7 @@ def load():
     if ADDON.getSetting('token_alldebrid') == "":
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-        oGui.addDir(SITE_IDENTIFIER, 'getToken', '[COLOR red]Les utilisateurs d\'Alldebrid cliquez ici. Pour les autres ceci n\'est pas nÃ©cÃ©ssaire \ncar l\'ancienne mÃ©thode est toujours fonctionnelle.[/COLOR]', 'films.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'getToken', '[COLOR red]Les utilisateurs d\'Alldebrid cliquez ici. Pour les autres ceci n\'est pas nécéssaire \ncar l\'ancienne méthode est toujours fonctionnelle.[/COLOR]', 'films.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
@@ -93,11 +93,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'SÃ©ries', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'Séries', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMenuMangas', 'AnimÃ©s', 'animes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuMangas', 'Animés', 'animes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
@@ -187,35 +187,35 @@ def showMenuSeries():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_HD[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_HD[1], 'SÃ©ries 1080p VF', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_HD[1], 'Séries 1080p VF', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS[1], 'SÃ©ries 1080p VOSTFR', 'vostfr.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS[1], 'Séries 1080p VOSTFR', 'vostfr.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_720VF[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_720VF[1], 'SÃ©ries 720p VF', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_720VF[1], 'Séries 720p VF', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_720VO[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_720VO[1], 'SÃ©ries 720p VOSTFR', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_720VO[1], 'Séries 720p VOSTFR', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_4K[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_4K[1], 'SÃ©ries 4K H265/HEVC', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_4K[1], 'Séries 4K H265/HEVC', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_MULTI[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_MULTI[1], 'SÃ©ries multilangue', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_MULTI[1], 'Séries multilangue', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SDVF[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SDVF[1], 'SÃ©ries (VF)', 'vf.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SDVF[1], 'Séries (VF)', 'vf.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SDVO[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SDVO[1], 'SÃ©ries (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SDVO[1], 'Séries (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -228,15 +228,15 @@ def showMenuMangas():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_VOSTFRS[1], "AnimÃ©s VOSTFR (Derniers ajouts)", 'animes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_VOSTFRS[1], "Animés VOSTFR (Derniers ajouts)", 'animes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_VFS[1], "AnimÃ©s VF (Derniers ajouts)", 'animes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_VFS[1], "Animés VF (Derniers ajouts)", 'animes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_MULTI[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_MULTI[1], "AnimÃ©s multilangue (Derniers ajouts)", 'animes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_MULTI[1], "Animés multilangue (Derniers ajouts)", 'animes.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -253,7 +253,7 @@ def showMenuAutre():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SPECTACLE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SPECTACLE_NEWS[1], "Spectacle et thÃ©atre (Derniers ajouts)", 'buzz.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SPECTACLE_NEWS[1], "Spectacle et théatre (Derniers ajouts)", 'buzz.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -294,9 +294,9 @@ def showGenres():
     liste.append( ['Arts Martiaux', URL_MAIN + 'arts-martiaux/'] )
     liste.append( ['Aventure', URL_MAIN + 'aventure/'] )
     liste.append( ['Biopic', URL_MAIN + 'biopic/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'comedie/'] )
-    liste.append( ['ComÃ©die Dramatique', URL_MAIN + 'comedie-dramatique/'] )
-    liste.append( ['ComÃ©die Musicale', URL_MAIN + 'comedie-musicale/'] )
+    liste.append( ['Comédie', URL_MAIN + 'comedie/'] )
+    liste.append( ['Comédie Dramatique', URL_MAIN + 'comedie-dramatique/'] )
+    liste.append( ['Comédie Musicale', URL_MAIN + 'comedie-musicale/'] )
     liste.append( ['Documentaire', URL_MAIN + 'documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'drame/'] )
     liste.append( ['Epouvante Horreur', URL_MAIN + 'epouvante-horreur/'] )
@@ -308,7 +308,7 @@ def showGenres():
     liste.append( ['Historique', URL_MAIN + 'historique/'] )
     liste.append( ['Musical', URL_MAIN + 'musical/'] )
     liste.append( ['Policier', URL_MAIN + 'policier/'] )
-    liste.append( ['PÃ©plum', URL_MAIN + 'peplum/'] )
+    liste.append( ['Péplum', URL_MAIN + 'peplum/'] )
     liste.append( ['Romance', URL_MAIN + 'romance/'] )
     liste.append( ['Science Fiction', URL_MAIN + 'science-fiction/'] )
     liste.append( ['Spectacle', URL_MAIN + 'spectacle/'] )
@@ -362,7 +362,7 @@ def showMovies(sSearch = ''):
 
         if URL_SEARCH[0] in sSearch:
             bGlobal_Search = True
-            sSearch=sSearch.replace(URL_SEARCH[0], '')
+            sSearch = sSearch.replace(URL_SEARCH[0], '')
 
         if Nextpagesearch:
             query_args = (('do', 'search'), ('subaction', 'search'), ('search_start', Nextpagesearch), ('story', sSearch), ('titleonly', '3'))
@@ -398,9 +398,9 @@ def showMovies(sSearch = ''):
             if progress_.iscanceled():
                 break
 
-            sTitle = aEntry[2]
             sUrl2 = aEntry[0]
             sThumb = aEntry[1]
+            sTitle = aEntry[2]
             sDesc = ''
 
             if sSearch and total > 2:
@@ -464,13 +464,13 @@ def showLinks():
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    sPattern = '(<title>TÃ©lÃ©charger |<title>)([^"]+) - ([^"]+)(VOSTFR|VF)*.+?</title>'
+    sPattern = '(<title>Télécharger |<title>)([^"]+) - ([^"]+)(VOSTFR|VF)*.+?</title>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     #VSlog(aResult)
     if (aResult[1]):
         sMovieTitle = aResult[1][0][1]
 
-    oGui.addText(SITE_IDENTIFIER,'[COLOR olive]QualitÃ©s disponibles:[/COLOR]')
+    oGui.addText(SITE_IDENTIFIER,'[COLOR olive]Qualités disponibles:[/COLOR]')
 
     sPattern = '<meta property="og:title" content=".+? - (.+?)(VOSTFR|VF)*/>'
     aResult = oParser.parse(sHtmlContent, sPattern)
@@ -663,7 +663,7 @@ def getHoster():#Ouvrir le clavier + requete
     sThumb = oInputParameterHandler.getValue('sThumb')
 
     sThumb = ''
-    sSearchText = oGui.showKeyBoard(heading = "Mettre ici le lien du hoster aprÃ¨s avoir passer les Recaptcha manuellement") #appelle le clavier xbmc
+    sSearchText = oGui.showKeyBoard(heading = "Mettre ici le lien du hoster après avoir passer les Recaptcha manuellement")#appelle le clavier xbmc
     if (sSearchText != False):
         sUrl = sSearchText
 

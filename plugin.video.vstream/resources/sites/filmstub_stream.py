@@ -12,7 +12,7 @@ import re
 
 SITE_IDENTIFIER = 'filmstub_stream'
 SITE_NAME = 'Filmstub'
-SITE_DESC = 'Films, SÃ©ries & Mangas en streaming'
+SITE_DESC = 'Films, Séries & Mangas en streaming'
 URL_MAIN = 'https://www.filmstub.co/'
 
 MOVIE_MOVIE = ('http://', 'load')
@@ -49,15 +49,15 @@ def load():
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', MOVIE_LIST[0])
-    # oGui.addDir(SITE_IDENTIFIER, MOVIE_LIST[1], 'Films & SÃ©ries (Liste)', 'az.png', oOutputParameterHandler)
+    # oGui.addDir(SITE_IDENTIFIER, MOVIE_LIST[1], 'Films & Séries (Liste)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
@@ -92,7 +92,7 @@ def showGenres():
     liste.append( ['Animation', URL_MAIN + 'category/animation/' + sType] )
     liste.append( ['Aventure', URL_MAIN + 'category/aventure/' + sType] )
     liste.append( ['BoxOffice', URL_MAIN + 'category/boxoffice/' + sType] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'category/comedie/' + sType] )
+    liste.append( ['Comédie', URL_MAIN + 'category/comedie/' + sType] )
     liste.append( ['Comedy', URL_MAIN + 'category/comedy/' + sType] )
     liste.append( ['Crime', URL_MAIN + 'category/crime/' + sType] )
     liste.append( ['Documentaire', URL_MAIN + 'category/documentaire/' + sType] )
@@ -109,7 +109,7 @@ def showGenres():
     liste.append( ['Kids', URL_MAIN + 'category/kids/' + sType] )
     liste.append( ['Musique', URL_MAIN + 'category/musique/' + sType] )
     liste.append( ['Music', URL_MAIN + 'category/music/' + sType] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'category/mystere/' + sType] )
+    liste.append( ['Mystère', URL_MAIN + 'category/mystere/' + sType] )
     liste.append( ['Mystery', URL_MAIN + 'category/mystery/' + sType] )
     liste.append( ['News', URL_MAIN + 'category/news/' + sType] )
     liste.append( ['Reality', URL_MAIN + 'category/reality/' + sType] )
@@ -118,7 +118,7 @@ def showGenres():
     liste.append( ['Science Fiction', URL_MAIN + 'category/science-fiction/' + sType] )
     liste.append( ['Science Fiction & Fantastique', URL_MAIN + 'category/science-fiction-fantastique/' + sType] )
     liste.append( ['Soap', URL_MAIN + 'category/soap/' + sType] )
-    liste.append( ['TÃ©lÃ©film', URL_MAIN + 'category/telefilm/' + sType] )
+    liste.append( ['Téléfilm', URL_MAIN + 'category/telefilm/' + sType] )
     liste.append( ['Thriller', URL_MAIN + 'category/thriller/' + sType] )
     liste.append( ['War & Politics', URL_MAIN + 'category/war-politics/' + sType] )
     liste.append( ['Western', URL_MAIN + 'category/western/' + sType] )
@@ -204,7 +204,7 @@ def showMovies(sSearch = ''):
                 sThumb = re.sub('/w\d+', '/w342', aEntry[1], 1)
                 sTitle = aEntry[3]
                 sYear = aEntry[4]
-                #aEntry[2] sers Ã  faire la difference entre film et serie
+                #aEntry[2] sers à faire la difference entre film et serie
 
                 sDisplayTitle = ('%s (%s)') % (sTitle, sYear)
             else:
@@ -239,7 +239,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -253,7 +253,7 @@ def __checkForNextPage(sHtmlContent):
 
     return False
 
-def showEpisode(sUrl = '',sThumb = '',sMovieTitle = '',oGui = ''):
+def showEpisode(sUrl = '', sThumb = '', sMovieTitle = '', oGui = ''):
 
     if sUrl:
        sUrl = sUrl

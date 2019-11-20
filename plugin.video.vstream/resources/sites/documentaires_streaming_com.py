@@ -25,7 +25,7 @@ REPLAYTV_GENRES = (True, 'showReplayGenres')
 REPORTAGE_NEWS = (URL_MAIN + 'category/reportages/', 'showMovies')
 
 URL_SEARCH = (URL_MAIN + '?s=', 'showMovies')
-URL_SEARCH_MISC = (URL_MAIN + '?s=', 'showMovies')
+URL_SEARCH_MISC = (URL_SEARCH[0], 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 def load():
@@ -70,9 +70,9 @@ def showDocuGenres():
     liste.append( ['Histoires', URL_MAIN + 'category/histoires/'] )
     liste.append( ['Nature, Animaux', URL_MAIN + 'category/nature_animaux/'] )
     liste.append( ['Paranormal', URL_MAIN + 'category/paranormal/'] )
-    liste.append( ['Politique, SociÃ©tÃ©', URL_MAIN + 'category/politique-societe/'] )
+    liste.append( ['Politique, Société', URL_MAIN + 'category/politique-societe/'] )
     liste.append( ['Science', URL_MAIN + 'category/science/'] )
-    liste.append( ['SociÃ©tÃ©', URL_MAIN + 'documentaire/societe/'] )
+    liste.append( ['Société', URL_MAIN + 'documentaire/societe/'] )
     liste.append( ['Sport', URL_MAIN + 'category/sport/'] )
     liste.append( ['Voiture', URL_MAIN + 'category/voiture/'] )
     liste.append( ['Voyage', URL_MAIN + 'category/voyage-2/'] )
@@ -117,7 +117,7 @@ def showReplayGenres():
 def showMovies(sSearch = ''):
     oGui = cGui()
     if sSearch:
-      sUrl = sSearch.replace(" ", "+")
+      sUrl = sSearch.replace(' ', '+')
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
@@ -127,7 +127,7 @@ def showMovies(sSearch = ''):
     sHtmlContent = sHtmlContent.replace('&#039;', '\'').replace('&#8212;', '-').replace('&#8217;', '\'').replace('&#8230;', '...')
     sHtmlContent = sHtmlContent.replace('[&hellip;]', '...')
 
-    sPattern = '<div class="item-thumbnail">.*?<a href="([^"]+)".*?<img src="([^"]+)" alt="([^"]+)"(?:.+?<div class="item-content hidden"><p>([^<]+)</p>|)'
+    sPattern = '<div id="post-.*?<a href="([^"]+)".*?<img src="([^"]+)" alt="([^"]+)"(?:.+?<div class="item-content hidden"><p>([^<]+)</p>|)'
 
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
@@ -161,13 +161,13 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
 
 def __checkForNextPage(sHtmlContent):
-    sPattern = '<link rel="next" href="(.+?)" />'
+    sPattern = '<link rel="next" href="([^"]+)" />'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0] == True):
@@ -186,7 +186,7 @@ def showHosters():
     sHtmlContent = oRequestHandler.request()
     sHtmlContent = sHtmlContent.replace('<iframe src="//www.facebook.com/', '')
 
-    sPattern = '<iframe.+?src="(.+?)".+?</iframe>'
+    sPattern = '<iframe.+?src="([^"]+)".+?</iframe>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 

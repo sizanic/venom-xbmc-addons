@@ -59,11 +59,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_COMMENTS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus commentÃ©s)', 'comments.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films (Les plus commentés)', 'comments.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NOTES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films (Les mieux notÃ©s)', 'notes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films (Les mieux notés)', 'notes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
@@ -75,7 +75,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -136,7 +136,7 @@ def showMovieGenres():
     liste.append( ['Action', URL_MAIN + 'action/'] )
     liste.append( ['Animation', URL_MAIN + 'animation/'] )
     liste.append( ['Aventure', URL_MAIN + 'aventure/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'comedie/'] )
+    liste.append( ['Comédie', URL_MAIN + 'comedie/'] )
     liste.append( ['Crime',URL_MAIN + 'crime/'] )
     liste.append( ['Documentaire',URL_MAIN + 'documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'drame/'] )
@@ -174,7 +174,7 @@ def showMovies(sSearch=''):
 
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    #rÃ©Ã©criture pour prendre les sÃ©ries dans le menu des genres
+    #réécriture pour prendre les séries dans le menu des genres
     sHtmlContent = sHtmlContent.replace('<span class="Qlty">TV</span></div><h3', '</div><h3')
 
     #fh = open('d:\\test.txt', "w")
@@ -228,9 +228,19 @@ def showMovies(sSearch=''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
         oGui.setEndOfDirectory()
+
+def __checkForNextPage(sHtmlContent):
+    oParser = cParser()
+    sPattern = '<a class="next page-numbers" href="([^"]+?)"'
+    aResult = oParser.parse(sHtmlContent, sPattern)
+
+    if (aResult[0] == True):
+        return aResult[1][0]
+
+    return False
 
 def ShowSaisonEpisodes():
     oGui = cGui()
@@ -275,16 +285,6 @@ def ShowSaisonEpisodes():
         progress_.VSclose(progress_)
 
     oGui.setEndOfDirectory()
-
-def __checkForNextPage(sHtmlContent):
-    oParser = cParser()
-    sPattern = '<a class="next page-numbers" href="([^"]+?)"'
-    aResult = oParser.parse(sHtmlContent, sPattern)
-
-    if (aResult[0] == True):
-        return aResult[1][0]
-
-    return False
 
 def showHosters():
     UA = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0'
@@ -332,7 +332,7 @@ def showHosters():
             sHtmlContent = oRequestHandler.request()
             sHosterUrl = oRequestHandler.getRealUrl()
             if 'public/dist' in sHosterUrl:
-                sHosterUrl = 'https://' + sHosterUrl.split('/')[2] + '/hls/'+sHosterUrl.split('id=')[1] + '/'+sHosterUrl.split('id=')[1] + '.playlist.m3u8'
+                sHosterUrl = 'https://' + sHosterUrl.split('/')[2] + '/hls/'+sHosterUrl.split('id=')[1] + '/' + sHosterUrl.split('id=')[1] + '.playlist.m3u8'
 
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             if (oHoster != False):

@@ -10,7 +10,7 @@ import re
 
 SITE_IDENTIFIER = 'les_docus'
 SITE_NAME = 'Les docus'
-SITE_DESC = 'Documentaires reportages et vidÃ©os en streaming en francais.'
+SITE_DESC = 'Documentaires reportages et vidéos en streaming en francais.'
 
 URL_MAIN = 'http://www.les-docus.com/'
 
@@ -32,7 +32,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', DOC_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, DOC_NEWS[1], 'NouveautÃ©s', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, DOC_NEWS[1], 'Nouveautés', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', DOC_GENRES[0])
@@ -57,19 +57,19 @@ def showGenres():
     liste = []
     liste.append( ['[COLOR teal]ARTS[/COLOR]', URL_MAIN + 'arts/'] )
     liste.append( ['Architecture', URL_MAIN + 'arts/architecture/'] )
-    liste.append( ['CinÃ©ma', URL_MAIN + 'arts/cinema/'] )
+    liste.append( ['Cinéma', URL_MAIN + 'arts/cinema/'] )
     liste.append( ['Dessin', URL_MAIN + 'arts/dessin/'] )
-    liste.append( ['LittÃ©rature', URL_MAIN + 'arts/litterature/'] )
+    liste.append( ['Littérature', URL_MAIN + 'arts/litterature/'] )
     liste.append( ['Musique', URL_MAIN + 'arts/musique/'] )
     liste.append( ['Peinture', URL_MAIN + 'arts/peinture/'] )
     liste.append( ['Sculpture', URL_MAIN + 'arts/sculpture/'] )
 
     liste.append( ['[COLOR teal]HISTOIRE[/COLOR]', URL_MAIN + 'histoire/'] )
-    liste.append( ['PrÃ©histoire', URL_MAIN + 'histoire/prehistoire/'] )
-    liste.append( ['AntiquitÃ©', URL_MAIN + 'histoire/antiquite/'] )
+    liste.append( ['Préhistoire', URL_MAIN + 'histoire/prehistoire/'] )
+    liste.append( ['Antiquité', URL_MAIN + 'histoire/antiquite/'] )
     liste.append( ['Moyen age', URL_MAIN + 'histoire/moyen-age/'] )
     liste.append( ['Temps modernes', URL_MAIN + 'histoire/temps-modernes/'] )
-    liste.append( ['Temps rÃ©volutionnaires', URL_MAIN + 'histoire/temps-revolutionnaires/'] )
+    liste.append( ['Temps révolutionnaires', URL_MAIN + 'histoire/temps-revolutionnaires/'] )
     liste.append( ['19 eme siecle', URL_MAIN + 'histoire/19eme-siecle/'] )
     liste.append( ['20 eme siecle', URL_MAIN + 'histoire/20eme-siecle/'] )
     liste.append( ['Epoque comtemporaine', URL_MAIN + 'histoire/epoque-contemporaine/'] )
@@ -78,18 +78,18 @@ def showGenres():
     liste.append( ['Argent', URL_MAIN + 'societe/argent/'] )
     liste.append( ['Monde', URL_MAIN + 'societe/monde/'] )
     liste.append( ['Politique', URL_MAIN + 'societe/politique/'] )
-    liste.append( ['SexualitÃ©', URL_MAIN + 'societe/sexualite/'] )
+    liste.append( ['Sexualité', URL_MAIN + 'societe/sexualite/'] )
     liste.append( ['Social', URL_MAIN + 'societe/social/'] )
 
     liste.append( ['[COLOR teal]SCIENCES[/COLOR]', URL_MAIN + 'sciences/'] )
     liste.append( ['Astronomie', URL_MAIN + 'sciences/astronomie/'] )
     liste.append( ['Ecologie', URL_MAIN + 'sciences/ecologie/'] )
     liste.append( ['Economie', URL_MAIN + 'sciences/economie/'] )
-    liste.append( ['GÃ©nÃ©tique', URL_MAIN + 'sciences/genetique/'] )
-    liste.append( ['GÃ©ographie', URL_MAIN + 'sciences/geographie/'] )
-    liste.append( ['GÃ©ologie', URL_MAIN + 'sciences/geologie/'] )
-    liste.append( ['MathÃ©matiques', URL_MAIN + 'sciences/mathematique/'] )
-    liste.append( ['MÃ©decine', URL_MAIN + 'sciences/medecine/'] )
+    liste.append( ['Génétique', URL_MAIN + 'sciences/genetique/'] )
+    liste.append( ['Géographie', URL_MAIN + 'sciences/geographie/'] )
+    liste.append( ['Géologie', URL_MAIN + 'sciences/geologie/'] )
+    liste.append( ['Mathématiques', URL_MAIN + 'sciences/mathematique/'] )
+    liste.append( ['Médecine', URL_MAIN + 'sciences/medecine/'] )
     liste.append( ['Physique', URL_MAIN + 'sciences/physique/'] )
     liste.append( ['Psychologie', URL_MAIN + 'sciences/psychologie/'] )
 
@@ -97,7 +97,7 @@ def showGenres():
     liste.append( ['Aviation', URL_MAIN + 'technologie/aviation/'] )
     liste.append( ['Informatique', URL_MAIN + 'technologie/informatique/'] )
     liste.append( ['Marine', URL_MAIN + 'technologie/marine/'] )
-    liste.append( ['TÃ©lÃ©phonie', URL_MAIN + 'technologie/telephonie'] )
+    liste.append( ['Téléphonie', URL_MAIN + 'technologie/telephonie'] )
 
     liste.append( ['[COLOR teal]PARANORMAL[/COLOR]', URL_MAIN + 'paranormal/'] )
     liste.append( ['Fantames et esprits', URL_MAIN + 'paranormal/fantomes-et-esprits/'] )
@@ -111,12 +111,12 @@ def showGenres():
     liste.append( ['Gastronomie', URL_MAIN + 'autres/gastronomie/'] )
     liste.append( ['Jeux video', URL_MAIN + 'autres/jeux-video/'] )
     liste.append( ['Loisirs', URL_MAIN + 'autres/loisirs/'] )
-    liste.append( ['MÃ©tiers', URL_MAIN + 'autres/metiers/'] )
+    liste.append( ['Métiers', URL_MAIN + 'autres/metiers/'] )
     liste.append( ['Militaire', URL_MAIN + 'autres/militaire/'] )
     liste.append( ['Nature', URL_MAIN + 'autres/nature/'] )
     liste.append( ['Policier', URL_MAIN + 'autres/policier/'] )
     liste.append( ['Religion', URL_MAIN + 'autres/religion/'] )
-    liste.append( ['SantÃ©', URL_MAIN + 'autres/sante/'] )
+    liste.append( ['Santé', URL_MAIN + 'autres/sante/'] )
     liste.append( ['Sport', URL_MAIN + 'autres/sport/'] )
     liste.append( ['Voyage', URL_MAIN + 'autres/voyage/'] )
 
@@ -139,8 +139,8 @@ def showMovies(sSearch = ''):
 
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-
-    sPattern = '<div class="post-header">.+?href="([^"]+)" title="([^"]+)">.+?<noscript><img.+?src="([^"]+)".+?<p *style.+?>([^<]+)<\/p>'
+    
+    sPattern = '<div class="post-header">.+?href="([^"]+)" title="([^"]+)">.+?img.+?src="([^"]+)".+?<p *style.+?>([^<]+)<\/p>'
 
     aResult = oParser.parse(sHtmlContent, sPattern)
 

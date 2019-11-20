@@ -11,9 +11,9 @@ from resources.lib.comaddon import progress#,VSlog
 
 SITE_IDENTIFIER = 'libre_stream_org'
 SITE_NAME = 'Libre-Streaming'
-SITE_DESC = 'Films & SÃ©ries en streaming'
+SITE_DESC = 'Films & Séries en streaming'
 
-URL_MAIN = 'http://ls-streaming.com/'
+URL_MAIN = 'http://ls-streaming.org/'
 
 MOVIE_MOVIE = (URL_MAIN + 'films/', 'showMovies')
 MOVIE_NEWS = (URL_MAIN + 'films/', 'showMovies')
@@ -48,24 +48,24 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_QLT[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_QLT[1], 'Films (QualitÃ©s)', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_QLT[1], 'Films (Qualités)', 'films.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     #En panne au 14/06
     #oOutputParameterHandler = cOutputParameterHandler()
     #oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
-    #oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'SÃ©ries (Liste)', 'az.png', oOutputParameterHandler)
+    #oGui.addDir(SITE_IDENTIFIER, SERIE_LIST[1], 'Séries (Liste)', 'az.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'SÃ©ries (VF)', 'vf.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries (VF)', 'vf.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'SÃ©ries (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries (VOSTFR)', 'vostfr.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -88,9 +88,9 @@ def showGenres():
     liste.append( ['Arts Martiaux', URL_MAIN + 'films/arts-martiaux/'] )
     liste.append( ['Aventure', URL_MAIN + 'films/aventure/'] )
     liste.append( ['Biopic', URL_MAIN + 'films/biopic/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'films/comedie/'] )
-    liste.append( ['ComÃ©die Dramatique', URL_MAIN + 'films/comedie-dramatique/'] )
-    liste.append( ['ComÃ©die Musicale', URL_MAIN + 'films/comedie-musicale/'] )
+    liste.append( ['Comédie', URL_MAIN + 'films/comedie/'] )
+    liste.append( ['Comédie Dramatique', URL_MAIN + 'films/comedie-dramatique/'] )
+    liste.append( ['Comédie Musicale', URL_MAIN + 'films/comedie-musicale/'] )
     liste.append( ['Disney', URL_MAIN + 'films/disney/'] )
     liste.append( ['Divers', URL_MAIN + 'films/divers/'] )
     liste.append( ['Documentaire', URL_MAIN + 'films/documentaire/'] )
@@ -212,7 +212,7 @@ def showMovies(sSearch = ''):
     if '/films' in sUrl:
         sPattern = sPattern + '.+?<div class="maskquality (.+?)">'
     if '/series' in sUrl:
-        sPattern = sPattern + '.+?>SÃ©ries</a>.+?<a href=".+?">([^<]+)</a>'
+        sPattern = sPattern + '.+?>Séries</a>.+?<a href=".+?">([^<]+)</a>'
 
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -251,7 +251,7 @@ def showMovies(sSearch = ''):
             if '/series/' in sUrl:
                 if not '/vostfr/' in sUrl and not '/version-francaise/' in sUrl:
                     sLang = aEntry[4]
-                    sLang = sLang.replace('Version FranÃ§aise', 'VF')
+                    sLang = sLang.replace('Version Française', 'VF')
                     sDisplayTitle = sTitle + ' (' + sLang + ')'
                 else:
                     sDisplayTitle = sTitle

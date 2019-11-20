@@ -14,9 +14,9 @@ import re, unicodedata
 
 SITE_IDENTIFIER = 'buzzmonclick_com'
 SITE_NAME = 'BuzzMonClick'
-SITE_DESC = 'Films & SÃ©ries en Streaming de qualitÃ© entiÃ¨rement gratuit.'
+SITE_DESC = 'Films & Séries en Streaming de qualité entièrement gratuit.'
 
-URL_MAIN = 'https://buzzmonclick.com/category/replay-tv/'
+URL_MAIN = 'https://buzzmonclick.net/category/replay-tv/'
 
 REPLAYTV_NEWS = (URL_MAIN, 'showMovies')
 REPLAYTV_REPLAYTV = ('http://', 'load')
@@ -25,8 +25,8 @@ REPLAYTV_GENRES = (True, 'showGenres')
 DOC_DOCS = ('http://', 'load')
 DOC_NEWS = (URL_MAIN + 'documentaires/', 'showMovies')
 
-URL_SEARCH = ('https://buzzmonclick.com/?s=', 'showMovies')
-URL_SEARCH_MISC = ('https://buzzmonclick.com/?s=', 'showMovies')
+URL_SEARCH = ('https://buzzmonclick.net/?s=', 'showMovies')
+URL_SEARCH_MISC = (URL_SEARCH[0], 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 
@@ -55,7 +55,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + 'tele-realite/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'TÃ©lÃ©-RÃ©alitÃ©', 'tv.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Télé-Réalité', 'tv.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -75,7 +75,7 @@ def showGenres():
     liste.append( ['Documentaires', URL_MAIN + 'documentaires/'] )
     liste.append( ['Divertissement', URL_MAIN + 'divertissement/'] )
     liste.append( ['Infos/Magazines', URL_MAIN + 'infos-magazine/'] )
-    liste.append( ['TÃ©lÃ©-RÃ©alitÃ©', URL_MAIN + 'tele-realite/'] )
+    liste.append( ['Télé-Réalité', URL_MAIN + 'tele-realite/'] )
 
     for sTitle, sUrl in liste:
 
@@ -136,13 +136,13 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
 
 def __checkForNextPage(sHtmlContent):
-    sPattern = '<span class=\'current\'>.+?href="([^"]+)"'
+    sPattern = 'class="nextpostslink" rel="next" href="([^"]+)"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0] == True):

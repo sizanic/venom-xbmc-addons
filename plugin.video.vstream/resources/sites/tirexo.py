@@ -15,8 +15,8 @@ UA = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:56.0) Gecko/20100101 Firefox/5
 
 SITE_IDENTIFIER = 'tirexo'
 SITE_NAME = '[COLOR violet]Tirexo (ZT lol)[/COLOR]'
-SITE_DESC = 'Films/SÃ©ries/Reportages/Concerts'
-URL_MAIN = 'https://www.zone-telechargement.plus/'
+SITE_DESC = 'Films/Séries/Reportages/Concerts'
+URL_MAIN = 'https://www.zone-telechargement.red/'
 
 URL_SEARCH_MOVIES = (URL_MAIN + 'index.php?do=search&subaction=search&catlist%5B%5D=2&story=', 'showMovies')
 URL_SEARCH_SERIES = (URL_MAIN + 'index.php?do=search&subaction=search&catlist%5B%5D=15&story=', 'showMovies')
@@ -34,6 +34,7 @@ MOVIE_SDLIGHT = (URL_MAIN + 'hdlight-720/', 'showMovies')
 MOVIE_HDLIGHT = (URL_MAIN + 'hdlight-1080/', 'showMovies')
 MOVIE_4KL = (URL_MAIN + 'film-ultra-hdlight-x265/', 'showMovies')
 MOVIE_4K = (URL_MAIN + 'film-ultra-hd-x265/', 'showMovies')
+MOVIE_NEWS = (URL_MAIN + 'films-gratuit/', 'showMovies')
 
 MOVIE_2010 = (URL_MAIN + 'films-2010-2019/', 'showMovies')
 MOVIE_2000 = (URL_MAIN + 'films-2000-2009/', 'showMovies')
@@ -55,6 +56,7 @@ SERIE_VOSTFRS = (URL_MAIN + 'series-vostfr/', 'showMovies')
 SERIE_VOSTFRS_720 = (URL_MAIN + 'series-vostfr-hd/','showMovies')
 SERIE_VOSTFRS_1080 = (URL_MAIN + 'series-vostfr-1080p/','showMovies')
 SERIE_VO = (URL_MAIN + 'series-vo/', 'showMovies')
+SERIE_NEWS = (URL_MAIN + 'telecharger-series/', 'showMovies')
 
 ANIM_ANIMS = (True, 'showMenuMangas')
 ANIM_VFS = (URL_MAIN + 'animes-vf/', 'showMovies')
@@ -64,10 +66,11 @@ ANIM_VOSTFRS = (URL_MAIN + 'animes-vostfr/', 'showMovies')
 ANIM_VOSTFRS_720 = (URL_MAIN + 'animes-vostfr-720p/', 'showMovies')
 ANIM_VOSTFRS_1080 = (URL_MAIN + 'animes-vostfr-1080p/', 'showMovies')
 FILM_ANIM = (URL_MAIN + 'films-mangas/', 'showMovies')
+ANIM_NEWS = (URL_MAIN + 'animes/', 'showMovies')
 
 DOC_NEWS = (URL_MAIN + 'emissions-tv-documentaires/souscate_doc-Documentaire/', 'showMovies')
 SPORT_SPORTS = (URL_MAIN + 'emissions-tv-documentaires/souscate_doc-Sport/', 'showMovies')
-TV_NEWS = (URL_MAIN + 'emissions-tv-documentaires/souscate_doc-Ã‰missions+TV/', 'showMovies')
+TV_NEWS = (URL_MAIN + 'emissions-tv-documentaires/souscate_doc-Émissions+TV/', 'showMovies')
 SPECT_NEWS = (URL_MAIN + 'emissions-tv-documentaires/souscate_doc-Spectacle/', 'showMovies')
 CONCERT_NEWS = (URL_MAIN + 'musiques-mp3-gratuite/souscat_music-Concerts/', 'showMovies')
 
@@ -80,11 +83,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'SÃ©ries', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuSeries', 'Séries', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMenuMangas', 'AnimÃ©s', 'animes.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMenuMangas', 'Animés', 'animes.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
@@ -99,6 +102,10 @@ def showMenuMovies():
     oOutputParameterHandler.addParameter('siteUrl', URL_SEARCH_MOVIES[0])
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Rechercher films', 'search.png', oOutputParameterHandler)
 
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Derniers ajouts', 'news.png', oOutputParameterHandler)
+    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_EXCLUS[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_EXCLUS[1], 'Exclus (Films populaires)', 'news.png', oOutputParameterHandler)
@@ -182,39 +189,43 @@ def showMenuSeries():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_SEARCH_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Rechercher sÃ©ries', 'search.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Rechercher séries', 'search.png', oOutputParameterHandler)
+
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Derniers ajouts', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'SÃ©ries (VF)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'Séries (VF)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VF_720[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'SÃ©ries 720p (VF)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'Séries 720p (VF)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VF_1080[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'SÃ©ries 1080p (VF)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'Séries 1080p (VF)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS[1], 'SÃ©ries (VOSTFR)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS[1], 'Séries (VOSTFR)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFRS_720[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS_720[1], 'SÃ©ries 720p (VOSTFR)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS_720[1], 'Séries 720p (VOSTFR)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFRS_1080[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS_1080[1], 'SÃ©ries 1080p (VOSTFR)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VOSTFRS_1080[1], 'Séries 1080p (VOSTFR)', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VO[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VO[1], 'SÃ©ries (VO)', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VO[1], 'Séries (VO)', 'series.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -224,6 +235,10 @@ def showMenuMangas():
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_SEARCH_ANIMS[0])
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Rechercher Animes', 'search.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', ANIM_NEWS[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEWS[1], 'Derniers ajouts', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VFS[0])
@@ -302,9 +317,9 @@ def showGenre():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     URL_MOVIES = URL_MAIN + sUrl + 'genre-'
 
-    listeGenres = ['Action', 'Animation', 'Arts Martiaux', 'Aventure', 'Biopic', 'Bollywood', 'ComÃ©die Dramatique',
-                   'ComÃ©die Musicale', 'ComÃ©die', 'Documentaire', 'Drame', 'Epouvante-horreur', 'Espionnage', 
-                   'Famille', 'Fantastique', 'Guerre', 'Historique', 'Horreur', 'Musical', 'PÃ©plum', 
+    listeGenres = ['Action', 'Animation', 'Arts Martiaux', 'Aventure', 'Biopic', 'Bollywood', 'Comédie Dramatique',
+                   'Comédie Musicale', 'Comédie', 'Documentaire', 'Drame', 'Epouvante-horreur', 'Espionnage', 
+                   'Famille', 'Fantastique', 'Guerre', 'Historique', 'Horreur', 'Musical', 'Péplum', 
                    'Policier', 'Romance', 'Science Fiction', 'Thriller', 'Western' ]
     for genre in listeGenres:
         oOutputParameterHandler = cOutputParameterHandler()
@@ -324,14 +339,15 @@ def showMovies(sSearch = ''):
 
     if sSearch or "index" in sUrl: # en mode recherche
         sUrl = sUrl.replace(' ', '%20').replace('[]', '%5B%5D')
-        sPattern = '<a class="mov-t nowrap" href="([^"]+)" title="[^"]+"> *<div data-toggle=.+?\/h5>([^"]+)".+?<img src="([^"]+)".+?alt="([^"]+)"'
+        sPattern = '<a class="mov-t nowrap" href="([^"]+)" title="[^"]+"> *<div data-toggle=.+?data-content="([^"]+)".+?<img src="([^"]+)".+?alt="([^"]+)"'
     else:
-        sPattern = '<a class="mov-t nowrap" href="([^"]+)"> *<div data-toggle=.+?\/h5>([^"]+)".+?<img src="([^"]+)".+?title="([^"]+)"'
+        sPattern = '<a class="mov-t nowrap" href="([^"]+)"> *<div data-toggle=.+?data-content="([^"]+)".+?<img src="([^"]+)".+?title="([^"]+)"'
 
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.addHeaderEntry('User-Agent', UA)
     oRequestHandler.addHeaderEntry('Accept-Encoding', 'gzip, deflate')
     sHtmlContent = oRequestHandler.request()
+
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     titles = set()
@@ -348,7 +364,7 @@ def showMovies(sSearch = ''):
             sThumb = aEntry[2]
             sTitle = aEntry[3]
             
-            # Enlever les films en doublons, il s'agit du mÃªme film dans une autre qualitÃ© qu'on retrouvera au moment du choix de la qualitÃ©
+            # Enlever les films en doublons, il s'agit du même film dans une autre qualité qu'on retrouvera au moment du choix de la qualité
             if sTitle in titles :
                 continue;
             titles.add(sTitle)
@@ -424,9 +440,9 @@ def showMoviesLinks():
     sHtmlContent = oRequestHandler.request()
 
     #Affichage du texte
-    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]QualitÃ©s disponibles pour ce film:[/COLOR]')
+    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Qualités disponibles pour ce film:[/COLOR]')
 
-    #rÃ©cupÃ©ration du Synopsis
+    #récupération du Synopsis
     sPattern = '<span data-slice="200" itemprop="description">(.+?)</span>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     if aResult[0]:
@@ -436,8 +452,8 @@ def showMoviesLinks():
         sDesc = sDesc.replace('<i>', '').replace('</i>', '')
         sDesc = sDesc.replace('<br>', '').replace('<br />', '')
 
-    #on recherche d'abord la qualitÃ© courante
-    sPattern = '<div style=".+?"> *QualitÃ© (.+?) [|] (.+?)<br> *<\/div>'
+    #on recherche d'abord la qualité courante
+    sPattern = '<div style=".+?"> *Qualité (.+?) [|] (.+?)<br> *<\/div>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     sTitle = sMovieTitle
@@ -447,7 +463,7 @@ def showMoviesLinks():
         sLang = aResult[1][0][1]
         sTitle = ('%s [%s] (%s)') % (sMovieTitle, sQual, sLang)
 
-    # On ajoute le lien mÃªme si on n'a pas rÃ©ussi Ã  dÃ©terminer la qualitÃ©
+    # On ajoute le lien même si on n'a pas réussi à déterminer la qualité
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', sUrl)
     oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
@@ -456,7 +472,7 @@ def showMoviesLinks():
 
     oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
-    #on regarde si dispo dans d'autres qualitÃ©s
+    #on regarde si dispo dans d'autres qualités
     sPattern = '<a href="([^"]+)"><span class="otherquality">.+?<b>([^"]+)<\/b>.+?<b>([^"]+)<\/b>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -482,7 +498,7 @@ def showMoviesLinks():
 
         progress_.VSclose(progress_)
 
-    #  QualitÃ© STREAMING
+    #  Qualité STREAMING
     sPattern = '<th .+?<img src=.+?>([^>]+?)<\/th>.+?class=\'streaming\' href=\'#\' data-text=.+? data-lien=\'([^>]+?)\' data-id=\'([^>]+?)\''
     aResult = oParser.parse(sHtmlContent, sPattern)
  
@@ -526,9 +542,9 @@ def showSeriesLinks():
     sHtmlContent = oRequestHandler.request()
 
     #Affichage du texte
-    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]QualitÃ©s disponibles pour cette saison :[/COLOR]')
+    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Qualités disponibles pour cette saison :[/COLOR]')
 
-    #rÃ©cupÃ©ration du Synopsis
+    #récupération du Synopsis
     try:
         sPattern = '<span data-slice="200" itemprop="description">(.+?)</span>'
         aResult = oParser.parse(sHtmlContent, sPattern)
@@ -541,8 +557,8 @@ def showSeriesLinks():
     except:
         pass
 
-    #Mise Ã  jour du titre
-    sPattern = '<h2>TÃ©lÃ©charger <b itemprop="name">(.+?)</b>(.+?)</h2>'
+    #Mise à jour du titre
+    sPattern = '<h2>Télécharger <b itemprop="name">(.+?)</b>(.+?)</h2>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     sTitle = sMovieTitle
@@ -553,8 +569,8 @@ def showSeriesLinks():
     saisons = []
     saisons.append(numSaison)
     
-    #on recherche d'abord la qualitÃ© courante
-    sPattern = 'QualitÃ© (.+?) \| (.+?)<br>'
+    #on recherche d'abord la qualité courante
+    sPattern = 'Qualité (.+?) \| (.+?)<br>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     sDisplayTitle = sTitle
@@ -571,7 +587,7 @@ def showSeriesLinks():
     oOutputParameterHandler.addParameter('sDesc', sDesc)
     oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', sDisplayTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
-    #on regarde si dispo dans d'autres qualitÃ©s
+    #on regarde si dispo dans d'autres qualités
     sHtmlContent1 = CutQual(sHtmlContent)
     sPattern1 = '<a href="([^"]+)"><span class="otherquality">.+?<b>([^"]+)<\/b>.+?<b>([^"]+)<\/b>.+?<b> (.+?)<'
     aResult1 = oParser.parse(sHtmlContent1, sPattern1)
@@ -586,7 +602,7 @@ def showSeriesLinks():
             if progress_.iscanceled():
                 break
             
-            # Si saison diffÃ©rente
+            # Si saison différente
             sSaison = aEntry[1].strip()
             if numSaison != sSaison:
                 otherSaison = True
@@ -610,9 +626,9 @@ def showSeriesLinks():
     if (otherSaison):
 
         #Affichage du titre
-        oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Autres saisons disponibles pour cette sÃ©rie :[/COLOR]')
+        oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Autres saisons disponibles pour cette série :[/COLOR]')
 
-        # Une ligne par saison, pas besoin d'afficher les qualitÃ©s ici
+        # Une ligne par saison, pas besoin d'afficher les qualités ici
         for aEntry in aResult1[1]:
 
             sSaison = aEntry[1].strip()
@@ -650,8 +666,8 @@ def showHosters():
     
     # Ajout des liens DL
     # Gere si un Hoster propose plusieurs liens
-    # Retire les resultats proposÃ©s en plusieurs parties (ce sont des .rar) 
-    sPattern = "<th scope=(\"col\" class=\"no-sort\"><img src=.+?>(.+?)<\/th>|\"row\".+?class='download'.+?href=\'([^>]+?)\'>TÃ©lÃ©charger <)"
+    # Retire les resultats proposés en plusieurs parties (ce sont des .rar) 
+    sPattern = "<th scope=(\"col\" class=\"no-sort\"><img src=.+?>(.+?)<\/th>|\"row\".+?class='download'.+?href=\'([^>]+?)\'>Télécharger <)"
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
@@ -743,7 +759,7 @@ def showSeriesHosters():
 
         progress_.VSclose(progress_)
         oGui.setEndOfDirectory()
-    else:   # certains films mals classÃ©s apparaissent dans les sÃ©ries
+    else:   # certains films mals classés apparaissent dans les séries
         showHosters()
 
 
@@ -799,7 +815,7 @@ def Display_protected_link():
                 aResult_dlprotecte = oParser.parse(sHtmlContent, sPattern_dlprotecte)
 
         else:
-            oDialog = dialog().VSok('Erreur dÃ©cryptage du lien')
+            oDialog = dialog().VSok('Erreur décryptage du lien')
             aResult_dlprotecte = (False, False)
 
     #Si lien normal
@@ -842,7 +858,7 @@ def CutQual(sHtmlContent):
 
 def CutSais(sHtmlContent):
     oParser = cParser()
-    sPattern = '"otherversionsspan">Saisons.+?galement disponibles pour cette sÃ©rie:(.+?)</div>'
+    sPattern = '"otherversionsspan">Saisons.+?galement disponibles pour cette série:(.+?)</div>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0]):
         return aResult[1][0]

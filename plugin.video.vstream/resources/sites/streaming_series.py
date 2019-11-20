@@ -11,8 +11,8 @@ from resources.lib.comaddon import progress, dialog, xbmc
 
 
 SITE_IDENTIFIER = 'streaming_series'
-SITE_NAME = 'Streaming-SÃ©ries'
-SITE_DESC = 'Regarder toutes vos sÃ©ries en Streaming Gratuit'
+SITE_NAME = 'Streaming-Séries'
+SITE_DESC = 'Regarder toutes vos séries en Streaming Gratuit'
 
 URL_MAIN = 'https://streaming-series.la/'
 
@@ -35,11 +35,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -60,7 +60,7 @@ def showGenres():
     liste.append( ['Action', URL_MAIN + 'category/series/action/'] )
     liste.append( ['Animation', URL_MAIN + 'category/series/animation/'] )
     liste.append( ['Aventure', URL_MAIN + 'category/series/aventure/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'category/series/comedie/'] )
+    liste.append( ['Comédie', URL_MAIN + 'category/series/comedie/'] )
     liste.append( ['Documentaire', URL_MAIN + 'category/series/documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'category/series/drame/'] )
     liste.append( ['Epouvante Horreur', URL_MAIN + 'category/series/epouvante-horreur/'] )
@@ -266,12 +266,12 @@ def ProtectstreamBypass(url):
     if (aResult[0] == True):
         postdata = 'k=' + aResult[1][0]
 
-        dialog().VSinfo('DÃ©codage en cours', "Patientez", 5)
+        dialog().VSinfo('Décodage en cours', "Patientez", 5)
         xbmc.sleep(5000)
 
         UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0'
 
-        oRequest = cRequestHandler(URL_MAIN + 'secur22.php')
+        oRequest = cRequestHandler(URL_MAIN + 'embed_secur.php')
         oRequest.setRequestType(1)
         oRequest.addHeaderEntry('User-Agent', UA)
         #oRequest.addHeaderEntry('Host', 'www.protect-stream.com')
@@ -284,7 +284,7 @@ def ProtectstreamBypass(url):
         #Test de fonctionnement
         aResult = oParser.parse(sHtmlContent, sPattern)
         if aResult[0]:
-            dialog().VSinfo('Lien encore protÃ©gÃ©', "Erreur", 5)
+            dialog().VSinfo('Lien encore protégé', "Erreur", 5)
             return ''
 
         #recherche du lien embed

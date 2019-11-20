@@ -12,7 +12,7 @@ SITE_IDENTIFIER = 'streamiz_co'
 SITE_NAME = 'Streamiz'
 SITE_DESC = 'Tous vos films en streaming gratuitement'
 
-URL_MAIN = 'https://streaming.streamiz.ws/'
+URL_MAIN = 'https://streamiz.org/'
 URL_API = URL_MAIN + '/xhr/get-player/'
 
 MOVIE_NEWS = (URL_MAIN + 'recemment-ajoute/', 'showMovies')
@@ -46,7 +46,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANNEES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par années)', 'annees.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -67,7 +67,7 @@ def showGenres():
 
     sHtmlContent = oRequestHandler.request()
     sStart = '<h3 class="nav-title nop">Film Streaming par Genres</h3>'
-    sEnd = '<h3 class="nav-title nop">Film Streaming par AnnÃ©es</h3>'
+    sEnd = '<h3 class="nav-title nop">Film Streaming par Années</h3>'
     sHtmlContent = oParser.abParse(sHtmlContent, sStart, sEnd)
 
     sPattern = '<li class="cat-item.+?"><a href=([^>]+)><i class="icons icon-play"></i>([^<]+)<i class=count>([^<]+)</i>'
@@ -139,14 +139,14 @@ def showMovies(sSearch = ''):
                 sUrl = URL_MAIN + aEntry[1].replace('\/', '/')
                 sThumb = aEntry[2].replace('\/', '/')
                 sTitle = aEntry[0]
-                sDesc = ''#aEntry[2].replace("&laquo;", 'Â«').replace("&raquo;", 'Â»').replace('  ', ' ')
+                sDesc = ''#aEntry[2].replace("&laquo;", '«').replace("&raquo;", '»').replace('  ', ' ')
                 sDisplayTitle = sTitle
             else:
                 sUrl = aEntry[0]
                 sThumb = aEntry[1]
                 sTitle = aEntry[2]
                 sQual = aEntry[3]
-                sDesc = aEntry[4].replace("&laquo;", 'Â«').replace("&raquo;", 'Â»').replace('  ', ' ')
+                sDesc = aEntry[4].replace("&laquo;", '«').replace("&raquo;", '»').replace('  ', ' ')
                 sDisplayTitle = ('%s [%s]') % (sTitle, sQual)
 
             oOutputParameterHandler = cOutputParameterHandler()
@@ -205,7 +205,7 @@ def showHosters():
                     if 'playvid' in sHosterUrl:
                         sHosterUrl = GetPlayvid(sHosterUrl)
 
-                    if 'duckload' in sHosterUrl: #pas trouvÃ© de liens ok
+                    if 'duckload' in sHosterUrl: #pas trouvé de liens ok
                         sHosterUrl = 'https://' + sHosterUrl.split('/')[2] + '/hls/'+sHosterUrl.split('id=')[1] + '/' + sHosterUrl.split('id=')[1] + '.playlist.m3u8'
 
                     if 'make_mp4' in sHosterUrl:
@@ -226,17 +226,22 @@ def showHosters():
 
 def GetPlayvid(url):
     oRequestHandler = cRequestHandler(url)
-    oRequestHandler.addHeaderEntry('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.7')
+    oRequestHandler.addHeaderEntry('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0')
     sHtmlContent = oRequestHandler.request()
-    
+
     oParser = cParser()
     sPattern = 'id="iframe" src="([^"]+)"'
     result = oParser.parse(sHtmlContent, sPattern)
-    if result:
+
+    if (result[0] == True):
         return result[1][0]
 
-    return url
-
+    else:
+        sPattern = "<source src='([^']+)' *type="
+        result = oParser.parse(sHtmlContent, sPattern)
+        if (result[0] == True):
+            return result[1][0]
+            
 def showGoogleLink():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
@@ -245,7 +250,7 @@ def showGoogleLink():
     sThumb = oInputParameterHandler.getValue('sThumb')
 
     oRequestHandler = cRequestHandler('https://playvid.org' + sUrl)
-    oRequestHandler.addHeaderEntry('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.7')
+    oRequestHandler.addHeaderEntry('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0')
     sHtmlContent = oRequestHandler.request()
 
     oParser = cParser()

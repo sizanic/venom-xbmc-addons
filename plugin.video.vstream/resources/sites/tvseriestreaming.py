@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 #Vstream https://github.com/Kodi-vStream/venom-xbmc-addons
+return False
 from resources.lib.gui.hoster import cHosterGui
 from resources.lib.gui.gui import cGui
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
@@ -9,7 +10,6 @@ from resources.lib.parser import cParser
 from resources.lib.comaddon import progress, addon, VSlog
 import re
 
-return False
 
 sColor = addon().getSetting("deco_color")
 
@@ -17,7 +17,7 @@ UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101 Firefox/60.0'
 
 SITE_IDENTIFIER = 'tvseriestreaming'
 SITE_NAME = 'Tv_seriestreaming'
-SITE_DESC = 'SÃ©ries & AnimÃ©s en Streaming'
+SITE_DESC = 'Séries & Animés en Streaming'
 
 URL_MAIN = 'https://les.seriestreaming.site/'
 
@@ -42,15 +42,15 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'SÃ©ries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_NEWS[1], 'Séries (Derniers ajouts)', 'news.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'SÃ©ries (Les plus vues)', 'views.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_VIEWS[1], 'Séries (Les plus vues)', 'views.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_COMMENT[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_COMMENT[1], 'SÃ©ries (Populaire)', 'comments.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_COMMENT[1], 'Séries (Populaire)', 'comments.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_LIST[0])
@@ -58,11 +58,11 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'SÃ©ries (Genres)', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_GENRES[1], 'Séries (Genres)', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_ANNEES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_ANNEES[1], 'SÃ©ries (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_ANNEES[1], 'Séries (Par années)', 'annees.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -115,7 +115,7 @@ def AlphaDisplay():
     oRequestHandler = cRequestHandler(URL_MAIN + 'serie-vf.html')
     sHtmlContent = oRequestHandler.request()
 
-    sHtmlContent = oParser.abParse(sHtmlContent, '<h1>Listes des sÃ©ries:</h1>', '<div class="container"><br>')
+    sHtmlContent = oParser.abParse(sHtmlContent, '<h1>Listes des séries:</h1>', '<div class="container"><br>')
 
     sPattern = '<a title="(' + sLetter + '.+?)" href="([^"]+)"'
     aResult = oParser.parse(sHtmlContent, sPattern)
@@ -150,7 +150,7 @@ def showGenres():
     liste.append( ['Animation', URL_MAIN + 'category/animation'] )
     liste.append( ['Anime', URL_MAIN + 'category/anime'] )
     liste.append( ['Biographie', URL_MAIN + 'category/biography'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'category/comedy'] )
+    liste.append( ['Comédie', URL_MAIN + 'category/comedy'] )
     liste.append( ['Crime', URL_MAIN + 'category/crime'] )
     liste.append( ['Criminel', URL_MAIN + 'category/criminel'] )
     liste.append( ['Documentaire', URL_MAIN + 'category/documentary'] )
@@ -165,13 +165,13 @@ def showGenres():
     liste.append( ['Judiciaire', URL_MAIN + 'category/judiciaire'] )
     liste.append( ['Music', URL_MAIN + 'category/music'] )
     liste.append( ['Musical', URL_MAIN + 'category/musical'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'category/mistery'] )
-    liste.append( ['Non-rÃ©fÃ©rencÃ©', URL_MAIN + 'category/na'] )
+    liste.append( ['Mystère', URL_MAIN + 'category/mistery'] )
+    liste.append( ['Non-référencé', URL_MAIN + 'category/na'] )
     liste.append( ['News', URL_MAIN + 'category/news'] )
     liste.append( ['Police', URL_MAIN + 'category/police'] )
     liste.append( ['Policier', URL_MAIN + 'category/policier'] )
-    liste.append( ['RÃ©alitÃ©', URL_MAIN + 'category/reality'] )
-    liste.append( ['RÃ©alitÃ©-tv', URL_MAIN + 'category/reality-tv'] )
+    liste.append( ['Réalité', URL_MAIN + 'category/reality'] )
+    liste.append( ['Réalité-tv', URL_MAIN + 'category/reality-tv'] )
     liste.append( ['Romance', URL_MAIN + 'category/romance'] )
     liste.append( ['Sci-fi', URL_MAIN + 'category/sci-fi'] )
     liste.append( ['Science-fiction', URL_MAIN + 'category/science-fiction'] )

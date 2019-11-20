@@ -15,7 +15,7 @@ SITE_IDENTIFIER = 'planet_streaming'
 SITE_NAME = 'Planet Streaming'
 SITE_DESC = 'Films en Streaming complet  VF HD'
 
-URL_MAIN = 'https://www.planet-streaming.net/'
+URL_MAIN = 'https://fr.planet-streaming.net/'
 
 MOVIE_MOVIE = (True, 'load')
 MOVIE_NEWS = (URL_MAIN + 'regarder-film/', 'showMovies')
@@ -73,9 +73,9 @@ def showGenres():
     liste.append( ['Arts Martiaux', URL_MAIN + 'arts-martiaux/'] )
     liste.append( ['Aventure', URL_MAIN + 'aventure/'] )
     liste.append( ['Biopic', URL_MAIN + 'biopic/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'comedie/'] )
-    liste.append( ['ComÃ©die Dramatique', URL_MAIN + 'comedie-dramatique/'] )
-    liste.append( ['ComÃ©die Musicale', URL_MAIN + 'comedie-musicale/'] )
+    liste.append( ['Comédie', URL_MAIN + 'comedie/'] )
+    liste.append( ['Comédie Dramatique', URL_MAIN + 'comedie-dramatique/'] )
+    liste.append( ['Comédie Musicale', URL_MAIN + 'comedie-musicale/'] )
     liste.append( ['Documentaire', URL_MAIN + 'documentaire/'] )
     liste.append( ['Drame', URL_MAIN + 'drame/'] )
     liste.append( ['Epouvante Horreur', URL_MAIN + 'epouvante-horreur/'] )
@@ -91,7 +91,7 @@ def showGenres():
     liste.append( ['Western', URL_MAIN + 'western/'] )
     #la suite fonctionne mais pas de menu sur le site
     liste.append( ['Espionnage', URL_MAIN + 'espionnage/'] )
-    liste.append( ['PÃ©plum', URL_MAIN + 'peplum/'] )
+    liste.append( ['Péplum', URL_MAIN + 'peplum/'] )
     liste.append( ['Divers', URL_MAIN + 'divers/'] )
 
     for sTitle, sUrl in liste:
@@ -149,7 +149,7 @@ def showMovies(sSearch = ''):
         oRequestHandler = cRequestHandler(sUrl)
         sHtmlContent = oRequestHandler.request()
 
-    sPattern = '<div class="fullstream fullstreaming">\s*<img src="([^"]+)"[^<>]+alt="([^"]+)".+?<h3 class="mov-title"><a href="([^"]+)".+?<strong>(?:QualitÃ©|Version)(.+?)<\/*strong>'
+    sPattern = '<div class="fullstream fullstreaming">\s*<img src="([^"]+)"[^<>]+alt="([^"]+)".+?<h3 class="mov-title"><a href="([^"]+)".+?<strong>(?:Qualité|Version)(.+?)<\/*strong>'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == False):

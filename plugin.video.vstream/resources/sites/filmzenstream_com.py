@@ -42,7 +42,7 @@ def load():
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANNEES[0])
-    # oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par annÃ©es)', 'annees.png', oOutputParameterHandler)
+    # oGui.addDir(SITE_IDENTIFIER, MOVIE_ANNEES[1], 'Films (Par années)', 'annees.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -60,25 +60,25 @@ def showGenres():
     oGui = cGui()
 
     liste = []
-    liste.append( ['Action', URL_MAIN + 'category/action-films/'] )
-    liste.append( ['Animation', URL_MAIN + 'category/animation-films/'] )
-    liste.append( ['Aventure', URL_MAIN + 'category/aventure-films/'] )
-    liste.append( ['Biographie', URL_MAIN + 'category/biographie-films/'] )
-    liste.append( ['ComÃ©die', URL_MAIN + 'category/comedie-films/'] )
-    liste.append( ['Crime', URL_MAIN + 'category/crime-films/'] )
-    liste.append( ['Drame', URL_MAIN + 'category/drame-films/'] )
-    liste.append( ['Familial', URL_MAIN + 'category/familial-films/'] )
-    liste.append( ['Fantastique', URL_MAIN + 'category/fantastique-films/'] )
-    liste.append( ['Guerre', URL_MAIN + 'category/guerre-films/'] )
-    liste.append( ['Histoire', URL_MAIN + 'category/histoire-films/'] )
-    liste.append( ['Horreur', URL_MAIN + 'category/horreur-films/'] )
-    liste.append( ['Musical', URL_MAIN + 'category/musical-films/'] )
-    liste.append( ['MystÃ¨re', URL_MAIN + 'category/mystere-films/'] )
-    liste.append( ['Romance', URL_MAIN + 'category/romance-films/'] )
-    liste.append( ['Science-fiction', URL_MAIN + 'category/science-fiction/'] ) # Pas de suffixe -films
-    liste.append( ['Sport', URL_MAIN + 'category/sport-films/'] )
-    liste.append( ['Thriller', URL_MAIN + 'category/thriller-films/'] )
-    liste.append( ['War', URL_MAIN + 'category/war-films/'] )
+    liste.append( ['Action', URL_MAIN + 'genre/action-films/'] )
+    liste.append( ['Animation', URL_MAIN + 'genre/animation-films/'] )
+    liste.append( ['Aventure', URL_MAIN + 'genre/aventure-films/'] )
+    liste.append( ['Biographie', URL_MAIN + 'genre/biographie-films/'] )
+    liste.append( ['Comédie', URL_MAIN + 'genre/comedie-online-vf/'] )
+    liste.append( ['Crime', URL_MAIN + 'genre/crime-films/'] )
+    liste.append( ['Drame', URL_MAIN + 'genre/drame-films/'] )
+    liste.append( ['Familial', URL_MAIN + 'genre/familial-films/'] )
+    liste.append( ['Fantastique', URL_MAIN + 'genre/fantastique-films/'] )
+    liste.append( ['Guerre', URL_MAIN + 'genre/guerre-films/'] )
+    liste.append( ['Histoire', URL_MAIN + 'genre/histoire-films/'] )
+    liste.append( ['Horreur', URL_MAIN + 'genre/horreur-online-hd/'] )
+    liste.append( ['Musical', URL_MAIN + 'genre/musical-films/'] )
+    liste.append( ['Mystère', URL_MAIN + 'genre/mystere-films/'] )
+    liste.append( ['Romance', URL_MAIN + 'genre/romance-films/'] )
+    liste.append( ['Science-fiction', URL_MAIN + 'genre/science-fiction/'] ) # Pas de suffixe -films
+    liste.append( ['Sport', URL_MAIN + 'genre/sport-films/'] )
+    liste.append( ['Thriller', URL_MAIN + 'genre/thriller-films/'] )
+    liste.append( ['War', URL_MAIN + 'genre/war-films/'] )
 
     for sTitle, sUrl in liste:
 
@@ -94,8 +94,8 @@ def showYears():
     oRequestHandler = cRequestHandler(URL_MAIN)
     sHtmlContent = oRequestHandler.request()
 
-    sStart = '<h3>AnnÃ©e de sortie'
-    sEnd = '<h3>QualitÃ©'
+    sStart = '<h3>Année de sortie'
+    sEnd = '<h3>Qualité'
     sHtmlContent = oParser.abParse(sHtmlContent, sStart, sEnd)
 
     sPattern = '<a href="([^"]+)">(.+?)</a>'

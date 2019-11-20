@@ -44,7 +44,7 @@ class main:
         #xbmc.log('Debug 2 >>' + str(xbmc.getInfoLabel('Container.FolderPath')), xbmc.LOGNOTICE)
 
         oInputParameterHandler = cInputParameterHandler()
-        oInputParameterHandler.getAllParameter()
+        #oInputParameterHandler.getAllParameter()
 
         if (oInputParameterHandler.exist('function')):
             sFunction = oInputParameterHandler.getValue('function')
