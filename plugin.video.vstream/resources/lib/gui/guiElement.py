@@ -269,6 +269,12 @@ class cGuiElement:
             sTitle2 = sTitle2 + 'S' + self.__Season
         if self.__Episode:
             sTitle2 = sTitle2 + 'E' + self.__Episode
+            
+        #Titre unique pour pour marquer VU (avec numéro de l'épisode pour les séries)
+        self.__sTitleWatched = self.str_conv(sTitle).replace(' ', '')
+        if sTitle2:
+            self.__sTitleWatched += '_' + sTitle2
+            
         if sTitle2:
             sTitle2 = "[COLOR %s]%s[/COLOR] " % (self.__sDecoColor, sTitle2)
 
@@ -307,11 +313,11 @@ class cGuiElement:
     def getCleanTitle(self):
         return self.__sCleanTitle
 
-    def setTitleSecond(self, sTitleSecond):
-        self.__sTitleSecond = sTitleSecond
+#    def setTitleWatched(self, sTitleWatched):
+#        self.__sTitleWatched = sTitleWatched
 
-    def getTitleSecond(self):
-        return self.__sTitleSecond
+    def getTitleWatched(self):
+        return self.__sTitleWatched
 
     def setDescription(self, sDescription):
         self.__sDescription = sDescription
@@ -377,16 +383,15 @@ class cGuiElement:
     def getWatched(self):
 
         #Fonctionne pour marquer lus un dossier
-        if not self.getTitle():
-            return ''
+        if not self.getTitleWatched():
+            return 0
 
         meta = {}
-        meta['title'] = self.getFileName() # A partir du titre original
+        meta['title'] = self.getTitleWatched()
         meta['site'] = self.getSiteUrl()
 
         data = self.DB.get_watched(meta)
         return data
-
 
     def str_conv(self, data):
         if isinstance(data, str):
@@ -402,9 +407,9 @@ class cGuiElement:
         data = re.sub(r'\[.*\]|\(.*\)', r'', str(data))
         data = data.replace('VF', '').replace('VOSTFR', '').replace('FR', '')
         #data=re.sub(r'[0-9]+?', r'', str(data))
-        data = data.replace('-', ' ')   # on garde un espace pour que Orient-express ne devienne pas Orientexpress
+        data = data.replace('-', ' ')  #on garde un espace pour que Orient-express ne devienne pas Orientexpress pour la recherche tmdb
         data = data.replace('Saison', '').replace('saison', '').replace('Season', '').replace('Episode', '').replace('episode', '')
-        data = re.sub('[^%s]' % (string.ascii_lowercase+string.digits), ' ', data.lower())
+        data = re.sub('[^%s]' % (string.ascii_lowercase + string.digits), ' ', data.lower())
         #data = urllib.quote_plus(data)
 
         #data = data.decode('string-escape')
@@ -546,10 +551,8 @@ class cGuiElement:
         # else:
             # return
 
-#         if 'playcount' in meta:
-#             del meta['playcount']
-#         if 'trailer' in meta:
-#             del meta['trailer']
+        #del meta['playcount']
+        #del meta['trailer']
 
         meta['title'] = self.getTitle()
 
@@ -635,12 +638,12 @@ class cGuiElement:
             self.addItemValues('plot', self.getDescription())
         if not self.getItemValue('year') and self.getYear():
             self.addItemValues('year', self.getYear())
-        if not self.getItemValue('cover_url') and self.getThumbnail():
-            self.addItemValues('cover_url', self.getThumbnail())
-        if not self.getItemValue('backdrop_url') and self.getPoster():
-            self.addItemValues('backdrop_url', self.getPoster())
         if not self.getItemValue('genre') and self.getGenre():
             self.addItemValues('genre', self.getGenre())
+#        if not self.getItemValue('cover_url') and self.getThumbnail():
+#            self.addItemValues('cover_url', self.getThumbnail())
+#        if not self.getItemValue('backdrop_url') and self.getPoster():
+#            self.addItemValues('backdrop_url', self.getPoster())
 
         # Used only if there is data in db, overwrite getMetadonne()
         w = self.getWatched()
