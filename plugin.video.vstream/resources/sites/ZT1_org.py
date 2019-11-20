@@ -6,17 +6,15 @@ from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
-from resources.lib.comaddon import progress, dialog, VSlog
-from resources.lib.config import GestionCookie
+from resources.lib.comaddon import progress, dialog
 
-import re, random
-import json
+import urllib, json
 
 UA = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0'
 
 SITE_IDENTIFIER = 'ZT1_org'
 SITE_NAME = 'Zone-telechargement-1'
-SITE_DESC = 'Films S√©ries Anim√©s'
+SITE_DESC = 'Films SÈries AnimÈs'
 URL_MAIN = 'https://zone-telechargement-1.org/'
 
 
@@ -36,8 +34,10 @@ URL_MAIN = 'https://zone-telechargement-1.org/'
 # MOVIE_VO = (URL_MAIN + 'films-vo/','showMovies')
 # MOVIE_INTEGRAL = (URL_MAIN + 'collection-films-integrale/','showMovies')
 
+MOVIES_PER_PAGE = 25
+
 MOVIE_GENRES = (URL_MAIN + 'wp-json/wp/v2/categories?per_page=100', 'showGenre')
-MOVIE_URL = (URL_MAIN + 'wp-json/wp/v2/posts?per_page=20&categories=')
+MOVIE_URL = (URL_MAIN + 'wp-json/wp/v2/posts?per_page='+str(MOVIES_PER_PAGE)+'&categories=')
 TAGS_URL = (URL_MAIN + 'wp-json/wp/v2/tags/')
 POST_URL = (URL_MAIN + 'wp-json/wp/v2/posts/')
 QUALITE_URL = (URL_MAIN + 'wp-json/wp/v2/posts?tags=')
@@ -66,7 +66,7 @@ def showSearch():
         return
 
 
-# R√©cup√©ration dynamique des cat√©gories
+# RÈcupÈration dynamique des catÈgories
 def showGenre():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
@@ -103,8 +103,11 @@ def showMovies():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
+    numPage = oInputParameterHandler.getValue('numPage')
+    if not numPage:
+        numPage = 1
 
-    oRequestHandler = cRequestHandler(sUrl)
+    oRequestHandler = cRequestHandler(sUrl+'&page='+ str(numPage))
     oRequestHandler.addHeaderEntry('User-Agent', UA)
     oRequestHandler.addHeaderEntry('Accept-Encoding', 'gzip, deflate')
     sHtmlContent = oRequestHandler.request()
@@ -114,6 +117,9 @@ def showMovies():
     tags = set()
 
     if contents:
+        
+        # Chaque titre de film correspond ‡ un tag
+        # filtrer par tag unique (ne pas tenir compte de la qualitÈ
         for content in contents:
             idTag = content['tags']
             tags.add(idTag[0])
@@ -124,8 +130,7 @@ def showMovies():
             progress_.VSupdate(progress_, total)
             if progress_.iscanceled():
                 break
-            sUrl = TAGS_URL + str(tag)
-            oRequestHandler = cRequestHandler(sUrl)
+            oRequestHandler = cRequestHandler(TAGS_URL + str(tag))
             oRequestHandler.addHeaderEntry('User-Agent', UA)
             oRequestHandler.addHeaderEntry('Accept-Encoding', 'gzip, deflate')
             sHtmlContent = oRequestHandler.request()
@@ -142,54 +147,26 @@ def showMovies():
              
             oGui.addMovie(SITE_IDENTIFIER, 'showMoviesLinks', sTitle, '', 'genres.png', '', oOutputParameterHandler)
         progress_.VSclose(progress_)
+        
+        if total > 0:
+            numPage = eval(str(numPage)) + 1
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sUrl)
+            oOutputParameterHandler.addParameter('numPage', numPage)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Suivant >>>[/COLOR]', oOutputParameterHandler)
             
     oGui.setEndOfDirectory()
     
-    
-# def showMovies():
-#     oGui = cGui()
-#     oInputParameterHandler = cInputParameterHandler()
-#     sUrl = oInputParameterHandler.getValue('siteUrl')
-# 
-#     oRequestHandler = cRequestHandler(sUrl)
-#     oRequestHandler.addHeaderEntry('User-Agent', UA)
-#     oRequestHandler.addHeaderEntry('Accept-Encoding', 'gzip, deflate')
-#     sHtmlContent = oRequestHandler.request()
-#     
-#     contents = json.loads(sHtmlContent)
-# 
-#     if contents:
-#         progress_ = progress().VScreate(SITE_NAME)
-#         total = len(contents)
-#         for content in contents:
-#             progress_.VSupdate(progress_, total)
-#             if progress_.iscanceled():
-#                 break
-# 
-#             sTitle = content['title']['rendered'].encode('utf-8')
-#             sTitle = sTitle.replace('&#8211; Qualit√©','(') + ')'
-#             sUrl2 = POST_URL + str(content['id'])
-#    
-#             oOutputParameterHandler = cOutputParameterHandler()
-#             oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
-#             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
-#             
-#             oGui.addMovie(SITE_IDENTIFIER, 'showMoviesLinks', sTitle, '', 'genres.png', '', oOutputParameterHandler)
-#         progress_.VSclose(progress_)
-# 
-#     oGui.setEndOfDirectory()
-
-
-def __checkForNextPage(sHtmlContent):
-    oParser = cParser()
-    sPattern = 'href="([^"]+)"><span class="fa fa-arrow-right">'
-    aResult = oParser.parse(sHtmlContent, sPattern)
-    if (aResult[0] == True):
-        nextPage = aResult[1][0]
-        if not nextPage.startswith('https'):
-            nextPage = URL_MAIN[:-1] + nextPage
-        return nextPage
-    return False
+# def __checkForNextPage(sHtmlContent):
+#     oParser = cParser()
+#     sPattern = 'href="([^"]+)"><span class="fa fa-arrow-right">'
+#     aResult = oParser.parse(sHtmlContent, sPattern)
+#     if (aResult[0] == True):
+#         nextPage = aResult[1][0]
+#         if not nextPage.startswith('https'):
+#             nextPage = URL_MAIN[:-1] + nextPage
+#         return nextPage
+#     return False
 
 def showMoviesLinks():
     oGui = cGui()
@@ -198,7 +175,7 @@ def showMoviesLinks():
     sUrl = oInputParameterHandler.getValue('siteUrl')
 
     #Affichage du texte
-    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]Qualit√©s disponibles pour ce film :[/COLOR]')
+    oGui.addText(SITE_IDENTIFIER, '[COLOR olive]QualitÈs disponibles pour ce film :[/COLOR]')
 
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.addHeaderEntry('User-Agent', UA)
@@ -216,8 +193,7 @@ def showMoviesLinks():
                 break
  
             sTitle = content['title']['rendered'].encode('utf-8')
-            sTitle = sTitle.replace('&#8211; Qualit√© ','[').replace(' | ','](') + ')'
-#            sTitle = sTitle.replace('&#8211; Qualit√©','(') + ')'
+            sTitle = sTitle.replace('&#8211; QualitÈ ','[').replace(' | ','](') + ')'
             sUrl2 = POST_URL + str(content['id'])
     
             oOutputParameterHandler = cOutputParameterHandler()
@@ -226,27 +202,6 @@ def showMoviesLinks():
              
             oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', 'genres.png', '', oOutputParameterHandler)
 
-#         total = len(contents)
-#         progress_ = progress().VScreate(SITE_NAME)
-#         progress_.VSupdate(progress_, total)
-#         shtml = contents['content']['rendered'].encode('utf-8')
-#         oParser = cParser()
-# #         sPattern = '<em>=(.+?)</em>'
-# #         aResult = oParser.parse(sHtmlContent, sPattern)
-# #         sDesc = aResult[1]
-#         sPattern = 'href="([^"]+)"'
-#         aResult = oParser.parse(shtml, sPattern)
-# 
-#         for aEntry in aResult[1]:
-#             if progress_.iscanceled():
-#                 break
-#             sUrl2 = aEntry
-#    
-#             oOutputParameterHandler = cOutputParameterHandler()
-#             oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
-#             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
-#             
-#             oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', 'movies.png', '', oOutputParameterHandler)
         progress_.VSclose(progress_)
 
     oGui.setEndOfDirectory()
@@ -266,65 +221,68 @@ def showHosters():
     sHtmlContent = oRequestHandler.request()
 
     oParser = cParser()
-    #sPattern = 'bold;color:.+?\\">(.+?)<\/div><\/b><b><form action=[^"]"(.+?)[^"]"'
-    sPattern = 'bold;color:.+?\\">(.+?)<\/div><\/b><b><form action=[^"]"(.+?)[^"]".+?submit[^"]">(.+?)<'
-#     sPattern = 'target=\"_blank\">([^"]+)</a></div>'
+    sPattern = 'bold;color:.+?\">(.+?)<.+?action=[^"]"(.+?)[^"]".+?value=[^"]"(.+?)[^"]">.+?value=[^"]"(.+?)[^"]">.+?submit[^"]">(.+?)<'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
     if (aResult[0] == True):
         for aEntry in aResult[1]:
 
-            # Exclure les fichiers en plusieurs parties
-            DL = aEntry[2]
+            # Exclure les fichiers en plusieurs parties ou non identifiÈ comme film 
+            DL = aEntry[4]
             if DL != 'T\\u00e9l\\u00e9charger':
                 continue
 
             sHoster = aEntry[0]
+            
+            oHoster = cHosterGui().checkHoster(sHoster.lower())
+            if not oHoster:
+                continue
+
             sUrl2 = aEntry[1]
-            # sHoster = aEntry[0]
-#             sHoster = re.sub('\.\w+', '', aEntry)
-#             sUrl2 = URL_MAIN[:-1] + aEntry[1]
+            encodeData = urllib.quote_plus(aEntry[2])
+            data = aEntry[3]
             sTitle = ('%s [COLOR coral]%s[/COLOR]') % (sMovieTitle, sHoster)
 
             oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('baseUrl', sUrl)
             oOutputParameterHandler.addParameter('siteUrl', sUrl2)
             oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
             oOutputParameterHandler.addParameter('sThumb', sThumb)
+            oOutputParameterHandler.addParameter('encodeData', encodeData)
+            oOutputParameterHandler.addParameter('data', data)
             oGui.addMovie(SITE_IDENTIFIER, 'Display_protected_link', sTitle, '', sThumb, sDesc, oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
 
-
 def Display_protected_link():
-    #VSlog('Display_protected_link')
+
     oGui = cGui()
     oParser = cParser()
     oInputParameterHandler = cInputParameterHandler()
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    baseUrl = oInputParameterHandler.getValue('baseUrl')
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sThumb = oInputParameterHandler.getValue('sThumb')
+    encodeData = oInputParameterHandler.getValue('encodeData')
+    data = oInputParameterHandler.getValue('data')
 
-    if 'link' in sUrl:
-        #Temporairement car la flemme de ce battre avec les redirection
-        import requests
-        headers = {'User-Agent': UA}
-        r = requests.get(sUrl.replace('//link', '/link'), headers = headers)
-        sUrl = r.url
-
-    if "dl-protect" in sUrl:
-        sHtmlContent = DecryptDlProtecte(sUrl)
+    if 'protect-stream' in sUrl:
+        f = { 'url' : encodeData, 'nextURL' : data, 'zt' : 'true'}
+        data = urllib.urlencode(f)
+        sHtmlContent = DecryptDlProtecte(sUrl, data, baseUrl)
 
         if sHtmlContent:
+            print(sHtmlContent)
             #Si redirection
             if sHtmlContent.startswith('http'):
                 aResult_dlprotecte = (True, [sHtmlContent])
             else:
-                sPattern_dlprotecte = '<div class="lienet"><a href="(.+?)">'
+                sPattern_dlprotecte = '<div class="lienet"><a href="([^"]+)"'
                 aResult_dlprotecte = oParser.parse(sHtmlContent, sPattern_dlprotecte)
 
         else:
-            oDialog = dialog().VSok('Erreur d√©cryptage du lien')
+            dialog().VSok('Erreur dÈcryptage du lien')
             aResult_dlprotecte = (False, False)
 
     #Si lien normal
@@ -367,130 +325,29 @@ def CutQual(sHtmlContent):
 
 def CutSais(sHtmlContent):
     oParser = cParser()
-    sPattern = '"otherversionsspan">Saisons.+?galement disponibles pour cette s√©rie:(.+?)</div>'
+    sPattern = '"otherversionsspan">Saisons.+?galement disponibles pour cette sÈrie:(.+?)</div>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0]):
         return aResult[1][0]
     return ''
 
-def DecryptDlProtecte(url):
-    VSlog('DecryptDlProtecte : ' + url)
+def DecryptDlProtecte(url, data, baseUrl):
 
     if not (url):
         return ''
 
-    # 1ere Requete pour recuperer le cookie
-    oRequestHandler = cRequestHandler(url)
-    oRequestHandler.addHeaderEntry('User-Agent', UA)
-
-    cookies = GestionCookie().Readcookie('www_dl-protect1_co')
-    #VSlog( 'cookie'  + str(cookies))
-
-    #Tout ca a virer et utiliser oRequestHandler.addMultipartFiled('sess_id': sId, 'upload_type': 'url', 'srv_tmp_url': sTmp) quand ca marchera
-    import string
-    _BOUNDARY_CHARS = string.digits
-    boundary = ''.join(random.choice(_BOUNDARY_CHARS) for i in range(29))
-    multipart_form_data = {'submit': 'continuer', 'submit': 'Continuer'}
-    data, headersMulti = encode_multipart(multipart_form_data, {}, boundary)
-
-    #2 eme requete pour avoir le lien
     oRequestHandler = cRequestHandler(url)
     oRequestHandler.setRequestType(1)
     oRequestHandler.addHeaderEntry('Host', url.split('/')[2])
-    oRequestHandler.addHeaderEntry('Referer', url)
+    oRequestHandler.addHeaderEntry('Referer', baseUrl)
     oRequestHandler.addHeaderEntry('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
     oRequestHandler.addHeaderEntry('User-Agent', UA)
     oRequestHandler.addHeaderEntry('Accept-Language', 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3')
-    oRequestHandler.addHeaderEntry('Content-Length', headersMulti['Content-Length'])
-    oRequestHandler.addHeaderEntry('Content-Type', headersMulti['Content-Type'])
-    oRequestHandler.addHeaderEntry('Cookie', cookies)
+    oRequestHandler.addHeaderEntry('Content-Length', len(str(data)))
+    oRequestHandler.addHeaderEntry('Content-Type',  "application/x-www-form-urlencoded")
     oRequestHandler.addHeaderEntry('Accept-Encoding', 'gzip, deflate')
-
     oRequestHandler.addParametersLine(data)
-
     sHtmlContent = oRequestHandler.request()
-
-    #fh = open('d:\\test.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
 
     return sHtmlContent
 
-#******************************************************************************
-#from http://code.activestate.com/recipes/578668-encode-multipart-form-data-for-uploading-files-via/
-
-"""Encode multipart form data to upload files via POST."""
-
-def encode_multipart(fields, files, boundary = None):
-    r"""Encode dict of form fields and dict of files as multipart/form-data.
-    Return tuple of (body_string, headers_dict). Each value in files is a dict
-    with required keys 'filename' and 'content', and optional 'mimetype' (if
-    not specified, tries to guess mime type or uses 'application/octet-stream').
-
-    >>> body, headers = encode_multipart({'FIELD': 'VALUE'},
-    ...                                  {'FILE': {'filename': 'F.TXT', 'content': 'CONTENT'}},
-    ...                                  boundary='BOUNDARY')
-    >>> print('\n'.join(repr(l) for l in body.split('\r\n')))
-    '--BOUNDARY'
-    'Content-Disposition: form-data; name="FIELD"'
-    ''
-    'VALUE'
-    '--BOUNDARY'
-    'Content-Disposition: form-data; name="FILE"; filename="F.TXT"'
-    'Content-Type: text/plain'
-    ''
-    'CONTENT'
-    '--BOUNDARY--'
-    ''
-    >>> print(sorted(headers.items()))
-    [('Content-Length', '193'), ('Content-Type', 'multipart/form-data; boundary=BOUNDARY')]
-    >>> len(body)
-    193
-    """
-
-    import mimetypes
-    import string
-
-    _BOUNDARY_CHARS = string.digits
-
-    def escape_quote(s):
-        return s.replace('"', '\\"')
-
-    if boundary is None:
-        boundary = ''.join(random.choice(_BOUNDARY_CHARS) for i in range(29))
-
-    lines = []
-
-    for name, value in fields.items():
-        lines.extend((
-            '-----------------------------{0}'.format(boundary),
-            'Content-Disposition: form-data; name="{0}"'.format(escape_quote(name)),
-            '',
-            str(value),
-            '-----------------------------{0}--'.format(boundary),
-            '',
-        ))
-
-    for name, value in files.items():
-        filename = value['filename']
-        if 'mimetype' in value:
-            mimetype = value['mimetype']
-        else:
-            mimetype = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
-        lines.extend((
-            '--{0}'.format(boundary),
-            'Content-Disposition: form-data; name="{0}"'.format(
-                    escape_quote(name), escape_quote(filename)),
-            'Content-Type: {0}'.format(mimetype),
-            '',
-            value['content'],
-        ))
-
-    body = '\r\n'.join(lines)
-
-    headers = {
-        'Content-Type': 'multipart/form-data; boundary=---------------------------{0}'.format(boundary),
-        'Content-Length': str(len(body)),
-    }
-
-    return (body, headers)
